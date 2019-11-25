@@ -22,7 +22,7 @@ import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.UIManager.LookAndFeelInfo;
 
 import controller.ControladoraUsuario;
-import model.vo.UsuarioVO;
+import model.vo.Usuario;
 
 public class FrmLogin extends JFrame {
 
@@ -31,7 +31,7 @@ public class FrmLogin extends JFrame {
 	private JPasswordField passwordField;
 	protected String login;
 	protected char[] password;
-	private UsuarioVO usuario;
+	private Usuario usuario;
 	private JLabel lblNewLabel_1;
 
 	public static void main(String[] args) {	
@@ -124,11 +124,11 @@ public class FrmLogin extends JFrame {
 		btnEntrar.setBounds(126, 259, 182, 29);
 		getContentPane().add(btnEntrar);
 
-		passwordField = new JPasswordField("Al@ves454545");
+		passwordField = new JPasswordField("@Lves2525");
 		passwordField.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				passwordField.setText("Al@ves454545");
+				passwordField.setText("@Lves2525");
 			}
 		});
 		passwordField.setBackground(Color.WHITE);
@@ -148,7 +148,7 @@ public class FrmLogin extends JFrame {
 
 	}
 
-	protected void passarUsuarioParaTelaInicial(UsuarioVO usuario) {
+	protected void passarUsuarioParaTelaInicial(Usuario usuario) {
 		FrmTelaInicial telaInicial = new FrmTelaInicial(usuario);
 		telaInicial.setVisible(true);
 		

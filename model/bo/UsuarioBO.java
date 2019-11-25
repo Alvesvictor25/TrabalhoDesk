@@ -5,17 +5,17 @@ import java.util.Random;
 
 import controller.ControladoraUsuario;
 import model.dao.UsuarioDAO;
-import model.vo.UsuarioVO;
+import model.vo.Usuario;
 
 public class UsuarioBO {
 
 	// CADASTRAR USUARIO.
-	public void cadastrarUsuarioBO(UsuarioVO usuarioVO) {
+	public void cadastrarUsuarioBO(Usuario usuario) {
 		UsuarioDAO usuarioDAO = new UsuarioDAO();
-		if (usuarioDAO.verificarRegistroPorCpf(usuarioVO.getCpf())) {
+		if (usuarioDAO.verificarRegistroPorCpf(usuario.getCpf())) {
 			System.out.println("\nUsuário já está cadastrado.");
 		} else {
-			int resultado = usuarioDAO.cadastrarUsuarioDAO(usuarioVO);
+			int resultado = usuarioDAO.cadastrarUsuarioDAO(usuario);
 			if (resultado == 1) {
 				System.out.println("\nUsuário cadastrado com sucesso.");
 
@@ -26,29 +26,29 @@ public class UsuarioBO {
 	}
 
 	// CONSULTAR USUARIO.
-	public ArrayList<UsuarioVO> consultarUsuariosBO() {
+	public ArrayList<Usuario> consultarUsuariosBO() {
 		UsuarioDAO usuarioDAO = new UsuarioDAO();
-		ArrayList<UsuarioVO> listaUsuariosVO = usuarioDAO.consultarTodosUsuariosDAO();
+		ArrayList<Usuario> listaUsuariosVO = usuarioDAO.consultarTodosUsuariosDAO();
 		if (listaUsuariosVO.isEmpty()) {
 			System.out.println("\nA lista de Usuários está vazia.");
 		}
 		return listaUsuariosVO;
 	}
 
-	public UsuarioVO consultarUsuarioBO(UsuarioVO usuarioVO) {
+	public Usuario consultarUsuarioBO(Usuario usuario) {
 		UsuarioDAO usuarioDAO = new UsuarioDAO();
-		UsuarioVO usuario = usuarioDAO.consultarTodosUsuariosDAO(usuarioVO);
+		Usuario usuario2 = usuarioDAO.consultarTodosUsuariosDAO(usuario);
 		if (usuario == null) {
 			System.out.println("\nUsuário não localizado.");
 		}
-		return usuario;
+		return usuario2;
 	}
 
 	// ATUALIZAR USUARIO.
-	public void atualizarUsuarioBO(UsuarioVO usuarioVO) {
+	public void atualizarUsuarioBO(Usuario usuario) {
 		UsuarioDAO usuarioDAO = new UsuarioDAO();
-		if (usuarioDAO.verificarRegistroPorIdUsuario(usuarioVO.getIdUsuario())) {
-			boolean resultado = usuarioDAO.atualizarUsuarioDAO(usuarioVO);
+		if (usuarioDAO.verificarRegistroPorIdUsuario(usuario.getIdUsuario())) {
+			boolean resultado = usuarioDAO.atualizarUsuarioDAO(usuario);
 			if (resultado) {
 				System.out.println("\nUsuário atualizado com sucesso.");
 			} else {
@@ -60,10 +60,10 @@ public class UsuarioBO {
 	}
 
 	// EXCLUIR USUARIO.
-	public void excluirUsuarioBO(UsuarioVO usuarioVO) {
+	public void excluirUsuarioBO(Usuario usuario) {
 		UsuarioDAO usuarioDAO = new UsuarioDAO();
-		if (usuarioDAO.verificarRegistroPorIdUsuario(usuarioVO.getIdUsuario())) {
-			int resultado = usuarioDAO.excluirUsuarioDAO(usuarioVO);
+		if (usuarioDAO.verificarRegistroPorIdUsuario(usuario.getIdUsuario())) {
+			int resultado = usuarioDAO.excluirUsuarioDAO(usuario);
 			if (resultado == 1) {
 				System.out.println("\nUsuário excluido com sucesso.");
 			} else {
@@ -86,7 +86,7 @@ public class UsuarioBO {
 
 	public String recuperarSenha(String emailUsuarioDestinatario) {
 		UsuarioDAO usuarioDAO = new UsuarioDAO();
-		UsuarioVO usuario = usuarioDAO.obterUsuarioPorEmail(emailUsuarioDestinatario);
+		Usuario usuario = usuarioDAO.obterUsuarioPorEmail(emailUsuarioDestinatario);
 		String msg = "";
 
 		if (usuario != null) {
@@ -102,7 +102,7 @@ public class UsuarioBO {
 		return msg;
 	}
 
-	private int gerarRecoveryKey(UsuarioVO usuario) {
+	private int gerarRecoveryKey(Usuario usuario) {
 		Random geradorDeRecoveryKey = new Random();
 		int numeroGerado = geradorDeRecoveryKey.nextInt(10000);
 
@@ -120,14 +120,24 @@ public class UsuarioBO {
 
 	}
 
-	public UsuarioVO efetuarLogin(String username, String senha) {
+	public Usuario efetuarLogin(String username, String senha) {
 		UsuarioDAO usuarioDAO = new UsuarioDAO();
 		return usuarioDAO.efetuarLogin(username, senha);
 	}
 
-	public UsuarioVO obterUsuarioParaTrocarSenha(String usernameUsuario, int recoverykey) {
+	public Usuario obterUsuarioParaTrocarSenha(String usernameUsuario, int recoverykey) {
 		UsuarioDAO usuarioDAO = new UsuarioDAO();
 		return usuarioDAO.obterUsuarioParaTrocarSenha(usernameUsuario, recoverykey);
+	}
+
+	public ArrayList<String> verificarCategoriasDespesaDoUsuario(int idUsuario) {
+		UsuarioDAO usuarioDAO = new UsuarioDAO();
+		return usuarioDAO.verificarCategoriasDespesaDoUsuario(idUsuario);
+	}
+
+	public ArrayList<String> verificarDescricoesDespesaDoUsuario(int idUsuario) {
+		UsuarioDAO usuarioDAO = new UsuarioDAO();
+		return usuarioDAO.verificarDescricoesDespesaDoUsuario(idUsuario);
 	}
 
 }

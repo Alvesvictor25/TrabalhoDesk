@@ -1,143 +1,188 @@
 package view2;
 
-import java.awt.BorderLayout;
-import java.util.ArrayList;
-
-import javax.swing.BorderFactory;
 import javax.swing.JPanel;
-import javax.swing.JTabbedPane;
-import javax.swing.JTable;
-import javax.swing.table.DefaultTableModel;
 
-import controller.ControladoraDespesa;
+import model.vo.Receita;
+import model.vo.Usuario;
+import javax.swing.JTextField;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+
+import com.toedter.calendar.JDateChooser;
+
 import controller.ControladoraReceita;
-import model.vo.DespesaVO;
-import model.vo.ReceitaVO;
-import model.vo.UsuarioVO;
+
+import javax.swing.JTable;
+import javax.swing.JButton;
+import javax.swing.JComboBox;
+import java.awt.event.ActionListener;
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.awt.event.ActionEvent;
 
 public class JPreceita extends JPanel {
 
 	private static final long serialVersionUID = 1L;
-	private JPanel jpDespesas;
-	private JTable jTable;
-	private JPanel jpReceita;
-	private ArrayList<ReceitaVO> listaReceita;
-	private ArrayList<DespesaVO> listaDespesa;
-	private String[] colunasTabelaDespesa = { "Categoria", "Descrição", "Vencimento", "Pagamento", "Valor" };
-	private String[] colunasTabelaReceita = { "Descricao", "Descrição", "Vencimento", "Pagamento", "Valor" };
-	private JTabbedPane jtbReceita;
-	private JPanel jpDespesa;
-	private JTable jTableDespesa;
-	private UsuarioVO usuarioJPreceita;
+	private Usuario usuarioJPreceita;
+	private JTextField txtValor;
+	private JTable table;
+	private JTextField txtCategoria;
+	private JTextField txtDescricao;
+	private JButton btnFiltrarResultado;
+	private JButton btnOcultar;
+	private JComboBox cbDescricao;
+	private JDateChooser dateChooser1;
+	private JDateChooser dateChooser2;
+	private JComboBox cbCategoria;
+	private JComboBox cbTipoDeConta;
+	private JDateChooser jchooserVencimento;
 
 	/**
 	 * Create the panel.
 	 * 
 	 * @param usuario
 	 */
-	public JPreceita(UsuarioVO usuarioLogin) {
+	public JPreceita(Usuario usuarioLogin) {
 		usuarioJPreceita = usuarioLogin;
-		setLayout(new BorderLayout(0, 0));
-		criaTela();
-		atualizar();
-		atualizarDespesa();
-	}
+		setBounds(100, 100, 900, 650);
+		setLayout(null);
 
-	private void criaTela() {
-		jpDespesas = new JPanel();
-		jpDespesas.setLayout(null);
-		jpDespesas.setBorder(BorderFactory.createTitledBorder("Ultimos lançamentos"));
-		jpDespesas.setBounds(20, 60, 650, 200);
-		add(jpDespesas);
+		JLabel lblDescricao = new JLabel("Descrição");
+		lblDescricao.setBounds(41, 55, 62, 20);
+		add(lblDescricao);
 
-		jtbReceita = new JTabbedPane();
-		jtbReceita.setBounds(10, 38, 596, 146);
-		jpDespesas.add(jtbReceita);
+		JLabel lblValor = new JLabel("Valor");
+		lblValor.setBounds(675, 55, 62, 20);
+		add(lblValor);
 
-		jpReceita = new JPanel();
-		jpReceita.setLayout(null);
-		jpReceita.setBounds(20, 20, 250, 170);
-		jtbReceita.add("Receita", jpReceita);
+		JLabel lblDataVencimento = new JLabel("Data Vencimento");
+		lblDataVencimento.setBounds(41, 87, 104, 20);
+		add(lblDataVencimento);
 
-		jpDespesa = new JPanel();
-		jpDespesa.setLayout(null);
-		jpDespesa.setBounds(20, 20, 250, 170);
-		jtbReceita.add("Despesa", jpDespesa);
+		JLabel lblCategoria = new JLabel("Categoria");
+		lblCategoria.setBounds(330, 54, 77, 22);
+		add(lblCategoria);
 
-		jTable = new JTable();
-		jTable.setLayout(null);
-		jTable.setBounds(10, 11, 540, 105);
-		jpDespesa.add(jTable);
+		cbDescricao = new JComboBox();
+		cbDescricao.setBounds(219, 304, 113, 21);
+		add(cbDescricao);
+		cbDescricao.setVisible(false);
 
-		jTableDespesa = new JTable();
-		jTableDespesa.setModel(new DefaultTableModel(
-			new Object[][] {
-				{null, null, null, null, null, null},
-				{null, null, null, null, null, null},
-				{null, null, null, null, null, null},
-				{null, null, null, null, null, null},
-				{null, null, null, null, null, null},
-			},
-			new String[] {
-				"New column", "New column", "New column", "New column", "New column", "New column"
+		dateChooser1 = new JDateChooser();
+		dateChooser1.setBounds(742, 304, 107, 20);
+		add(dateChooser1);
+
+		dateChooser2 = new JDateChooser();
+		dateChooser2.setBounds(606, 304, 107, 20);
+		add(dateChooser2);
+		dateChooser2.setVisible(false);
+
+		cbCategoria = new JComboBox();
+		cbCategoria.setBounds(378, 304, 113, 21);
+		add(cbCategoria);
+		cbCategoria.setVisible(false);
+
+		cbTipoDeConta = new JComboBox();
+		cbTipoDeConta.setBounds(41, 303, 127, 23);
+		add(cbTipoDeConta);
+		cbTipoDeConta.setVisible(false);
+
+		txtDescricao = new JTextField();
+		txtDescricao.setBounds(113, 55, 181, 21);
+		add(txtDescricao);
+		txtDescricao.setColumns(10);
+
+		txtValor = new JTextField();
+		txtValor.setBounds(732, 55, 89, 20);
+		add(txtValor);
+		txtValor.setColumns(10);
+
+		txtCategoria = new JTextField();
+		txtCategoria.setBounds(417, 54, 231, 22);
+		add(txtCategoria);
+		txtCategoria.setColumns(10);
+
+		jchooserVencimento = new JDateChooser("dd/MM/yyyy", "##/##/####", (char) 0);
+		jchooserVencimento.setBounds(155, 87, 121, 23);
+		add(jchooserVencimento);
+
+		JButton button_1 = new JButton("Excluir despesa");
+		button_1.setBounds(225, 457, 139, 23);
+		add(button_1);
+
+		JButton button_2 = new JButton("Detalhar");
+		button_2.setBounds(413, 457, 89, 23);
+		add(button_2);
+
+		JButton button_3 = new JButton("Salvar");
+		button_3.addActionListener(new ActionListener() {
+			private JDateChooser dateChooserReceita;
+
+			public void actionPerformed(ActionEvent e) {
+
+				int idUsuarioReceita = usuarioJPreceita.getIdUsuario();
+				String descricaoReceita = txtDescricao.getText();
+				String categoriaReceita = txtCategoria.getText();
+				Double valorReceita = Double.parseDouble(txtValor.getText());
+				LocalDate dataReceita = dateChooserReceita.getDate().toInstant().atZone(ZoneId.systemDefault())
+						.toLocalDate();
+
+				ControladoraReceita controllerReceita = new ControladoraReceita();
+				String mensagemValidacao = controllerReceita.validarCamposCadastrarReceita(idUsuarioReceita,
+						descricaoReceita, categoriaReceita, valorReceita, dataReceita);
+
+				if (mensagemValidacao.isEmpty()) {
+					Receita receitaDoUsuario = new Receita(idUsuarioReceita, descricaoReceita, categoriaReceita,
+							valorReceita, dataReceita);
+					boolean resultadoCadastro = controllerReceita.cadastrarReceitaController(receitaDoUsuario);
+					if (resultadoCadastro) {
+						JOptionPane.showMessageDialog(null, "Receita cadastrada com sucesso!!");
+					} else {
+						JOptionPane.showMessageDialog(null, "Erro ao cadastrar receita.");
+					}
+
+				} else {
+					JOptionPane.showMessageDialog(null, mensagemValidacao);
+				}
+
 			}
-		));
-		jTableDespesa.setLayout(null);
-		jTableDespesa.setBounds(10, 11, 540, 105);
-		jpReceita.add(jTableDespesa);
+		});
+		button_3.setBounds(37, 141, 144, 21);
+		add(button_3);
+
+		btnFiltrarResultado = new JButton("Filtrar consulta");
+		btnFiltrarResultado.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				boolean statusBotoes = true;
+				habilitarDesabilitarBotoesFiltro(statusBotoes);
+
+			}
+		});
+		btnFiltrarResultado.setBounds(17, 303, 151, 18);
+		add(btnFiltrarResultado);
+
+		btnOcultar = new JButton("Ocultar");
+		btnOcultar.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				boolean statusBotoes = false;
+				habilitarDesabilitarBotoesFiltro(statusBotoes);
+
+			}
+		});
+		btnOcultar.setBounds(17, 251, 151, 18);
+		btnOcultar.setVisible(false);
+		add(btnOcultar);
 
 	}
 
-	private void atualizarDespesa() {
-		ControladoraDespesa despesa = new ControladoraDespesa();
-		listaDespesa = despesa.consultarTodasDespesasController();
-
-		limparTela();
-
-		DefaultTableModel model = (DefaultTableModel) jTable.getModel();
-
-		for (DespesaVO receit : listaDespesa) {
-			String[] novaLinha = new String[5];
-			novaLinha[0] = receit.getDescricao();
-			novaLinha[1] = receit.getCategoria();
-			novaLinha[2] = String.valueOf(receit.getValor());
-			novaLinha[3] = String.valueOf(receit.getDataPagamento());
-			novaLinha[4] = String.valueOf(receit.getDataVencimento());
-
-			model.addRow(novaLinha);
-		}
+	protected void habilitarDesabilitarBotoesFiltro(boolean statusBotoes) {
+		cbCategoria.setVisible(statusBotoes);
+		cbDescricao.setVisible(statusBotoes);
+		cbTipoDeConta.setVisible(statusBotoes);
+		dateChooser1.setVisible(statusBotoes);
+		dateChooser2.setVisible(statusBotoes);
+		btnFiltrarResultado.setVisible(!statusBotoes);
+		btnOcultar.setVisible(statusBotoes);
 
 	}
-
-	private void atualizar() {
-
-		ControladoraReceita receita = new ControladoraReceita();
-		listaReceita = receita.consultarTodasReceitasController();
-
-		limparTelaReceita();
-
-		DefaultTableModel model = (DefaultTableModel) jTable.getModel();
-
-		for (ReceitaVO receit : listaReceita) {
-			String[] novaLinha = new String[5];
-			novaLinha[0] = receit.getDescricao();
-			novaLinha[1] = receit.getDescricao();
-			novaLinha[2] = receit.getDescricao();
-			novaLinha[3] = receit.getDescricao();
-			novaLinha[4] = receit.getDescricao();
-
-			model.addRow(novaLinha);
-		}
-
-	}
-
-	private void limparTelaReceita() {
-		jTable.setModel(new DefaultTableModel(new Object[][] { colunasTabelaReceita }, colunasTabelaReceita));
-		
-	}
-
-	private void limparTela() {
-		jTable.setModel(new DefaultTableModel(new Object[][] { colunasTabelaReceita }, colunasTabelaReceita));
-
-	} // TODO Auto-generated method stub
 }

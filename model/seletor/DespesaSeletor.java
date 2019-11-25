@@ -1,12 +1,12 @@
 package model.seletor;
 
-import model.vo.UsuarioVO;
+import model.vo.Usuario;
 
 public class DespesaSeletor {
 
 
 	// Atributos que servirão de filtros
-	private UsuarioVO nomeUsuario;
+	private Usuario nomeUsuario;
 
 	// Atributos para possível paginação dos resultados (intervalo)
 	private int limite;
@@ -18,7 +18,7 @@ public class DespesaSeletor {
 		this.pagina = -1;
 	}
 
-	public DespesaSeletor(UsuarioVO nomeSelecionado) {
+	public DespesaSeletor(Usuario nomeSelecionado) {
 	}
 
 	/**
@@ -55,11 +55,11 @@ public class DespesaSeletor {
 	}
 
 	// Getters e setters
-	public UsuarioVO getUsuario() {
+	public Usuario getUsuario() {
 		return nomeUsuario;
 	}
 
-	public void setUsuario(UsuarioVO usuario) {
+	public void setUsuario(Usuario usuario) {
 		this.nomeUsuario = usuario;
 	}
 

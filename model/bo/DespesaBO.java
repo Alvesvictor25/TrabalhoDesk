@@ -4,23 +4,23 @@ import java.util.ArrayList;
 
 
 import model.dao.DespesaDAO;
-import model.vo.DespesaVO;
-import model.vo.UsuarioVO;
+import model.vo.Despesa;
+import model.vo.Usuario;
 
 
 public class DespesaBO {
 
 	// CADASTRAR DESPESA. 
-	public void cadastrarDespesaBO(DespesaVO despesaVO) {
+	public void cadastrarDespesaBO(Despesa despesa) {
 		DespesaDAO despesaDAO = new DespesaDAO();
-		despesaDAO.cadastrarDespesaDAO(despesaVO);
+		despesaDAO.cadastrarDespesaDAO(despesa);
 			
 	}
 
 	// CONSULTAR DESPESA (TODAS). 
-	public ArrayList<DespesaVO> consultarDespesaBO() {
+	public ArrayList<Despesa> consultarDespesaBO() {
 		DespesaDAO despesaDAO = new DespesaDAO();
-		ArrayList<DespesaVO> listaDepesaVO = despesaDAO.consultarTodosDespesasDAO();
+		ArrayList<Despesa> listaDepesaVO = despesaDAO.consultarTodosDespesasDAO();
 		if (listaDepesaVO.isEmpty()) {
 			System.out.println("\nA lista de despesas está vazia.");
 
@@ -29,21 +29,21 @@ public class DespesaBO {
 	}
 	
 	// CONSULTAR DESPESA (UM).
-	public DespesaVO consultarDespesaBO(DespesaVO despesaVO) {
+	public Despesa consultarDespesaBO(Despesa despesa) {
 		DespesaDAO despesaDAO = new DespesaDAO();
-		DespesaVO despesa = despesaDAO.consultarTodosDespesasDAO(despesaVO);
+		Despesa despesaConsultar = despesaDAO.consultarTodosDespesasDAO(despesa);
 		if(despesa == null) {
 			System.out.println("\nDespesa não localizada.");
 		}
-		return despesa;
+		return despesaConsultar;
 	}
 
 
 	// ATUALIZAR DESPESA. 
-	public void atualizarDespesaBO(DespesaVO despesaVO) {
+	public void atualizarDespesaBO(Despesa despesa) {
 		DespesaDAO despesaDAO = new DespesaDAO();
-		if (despesaDAO.verificarRegistroDespesaPorId(despesaVO.getId())) {
-			int resultado = despesaDAO.atualizarDespesaDAO(despesaVO);
+		if (despesaDAO.verificarRegistroDespesaPorId(despesa.getId())) {
+			int resultado = despesaDAO.atualizarDespesaDAO(despesa);
 			if (resultado == 1) {
 				System.out.println("\nDespesa atualizada com sucesso.");
 			} else {
@@ -57,10 +57,10 @@ public class DespesaBO {
 	}
 
 	// EXCLUIR DESPESA. 
-	public void excluirDespesaBO(DespesaVO despesaVO) {
+	public void excluirDespesaBO(Despesa despesa) {
 		DespesaDAO despesaDAO = new DespesaDAO();
-		if (despesaDAO.verificarRegistroDespesaPorId(despesaVO.getId())) {
-			int resultado = despesaDAO.excluirDespesaDAO(despesaVO);
+		if (despesaDAO.verificarRegistroDespesaPorId(despesa.getId())) {
+			int resultado = despesaDAO.excluirDespesaDAO(despesa);
 			if (resultado == 1) {
 				System.out.println("\nDespesa excluida com sucesso.");
 			} else {
@@ -72,9 +72,9 @@ public class DespesaBO {
 		}
 	}
 
-	public ArrayList<DespesaVO> consultarTodasAsDespesasPorUsuario(int idusuario) {
+	public ArrayList<Despesa> consultarTodasAsDespesasPorUsuario(int idusuario) {
 		DespesaDAO despesaDAO = new DespesaDAO();
-		ArrayList<DespesaVO> listaDepesaVO = despesaDAO.consultarTodasAsDespesasPorUsuario(idusuario);
+		ArrayList<Despesa> listaDepesaVO = despesaDAO.consultarTodasAsDespesasPorUsuario(idusuario);
 		return listaDepesaVO;
 	}
 }

@@ -38,7 +38,7 @@ public class JPanelNovoUsuarioOp3 extends JPanel {
 
 		JLabel lblNewLabel_1 = new JLabel("");
 		lblNewLabel_1.setIcon(new ImageIcon(JPanelNovoUsuarioOp2.class.getResource("/icones/segunda.png")));
-		lblNewLabel_1.setBounds(10, 15, 678, 474);
+		lblNewLabel_1.setBounds(10, 0, 678, 474);
 		add(lblNewLabel_1);
 
 	}

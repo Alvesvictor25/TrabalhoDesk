@@ -1,42 +1,49 @@
 package controller;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 
 import model.bo.ReceitaBO;
 import model.seletor.ReceitaSeletor;
-import model.vo.ReceitaVO;
+import model.vo.Receita;
 
 public class ControladoraReceita {
 
-	public void cadastrarReceitaController(ReceitaVO receitaVO) {
+	public boolean cadastrarReceitaController(Receita receita) {
 		ReceitaBO receitaBO = new ReceitaBO();
-		receitaBO.cadastrarReceitaBO(receitaVO);
+		return receitaBO.cadastrarReceitaBO(receita);
 	}
 
-	public ArrayList<ReceitaVO> consultarTodasReceitasController() {
+	public ArrayList<Receita> consultarTodasReceitasController() {
 		ReceitaBO receitaBO = new ReceitaBO();
 		return receitaBO.consultarReceitasBO();
 	}
  
-	public ReceitaVO consultarReceitaController(ReceitaVO receitaVO) {
+	public Receita consultarReceitaController(Receita receita) {
 		ReceitaBO receitaBO = new ReceitaBO();
-		return receitaBO.consultarReceitaBO(receitaVO);
+		return receitaBO.consultarReceitaBO(receita);
 	}
 
-	public void atualizarReceitaController(ReceitaVO receitaVO) {
+	public void atualizarReceitaController(Receita receita) {
 		ReceitaBO receitaBO = new ReceitaBO();
-		receitaBO.atualizarReceitaBO(receitaVO);
+		receitaBO.atualizarReceitaBO(receita);
 	}
 
-	public void excluirReceitaController(ReceitaVO receitaVO) {
+	public void excluirReceitaController(Receita receita) {
 		ReceitaBO receitaBO = new ReceitaBO();
-		receitaBO.excluirReceitaBO(receitaVO);
+		receitaBO.excluirReceitaBO(receita);
 	}
 
-	public ArrayList<ReceitaVO> consultarReceitas(ReceitaSeletor seletor) {
+	public ArrayList<Receita> consultarReceitas(ReceitaSeletor seletor) {
 		ReceitaBO receitaBO = new ReceitaBO();
 		return null;
 		
+	}
+
+	public String validarCamposCadastrarReceita(int idUsuarioReceita, String descricaoReceita, String categoriaReceita,
+			Double valorReceita, LocalDate dataReceita) {
+		String mensagemValidacao = "";
+		return mensagemValidacao;
 	}
 
 }

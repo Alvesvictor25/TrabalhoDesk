@@ -2,13 +2,13 @@ package model.vo;
 
 import java.time.LocalDate;
 
-public class DespesaVO extends LancamentoVO {
+public class Despesa extends LancamentoVO {
 
 	private LocalDate dataVencimento;
 	private LocalDate dataPagamento;
 	private String categoria;
 
-	public DespesaVO(LocalDate dataVencimento, LocalDate dataPagamento, String categoria) {
+	public Despesa(LocalDate dataVencimento, LocalDate dataPagamento, String categoria) {
 		super();
 		this.dataVencimento = dataVencimento;
 		this.dataPagamento = dataPagamento;
@@ -16,13 +16,13 @@ public class DespesaVO extends LancamentoVO {
 
 	}
 
-	public DespesaVO() {
+	public Despesa() {
 		super();
 		// TODO Auto-generated constructor stub
 	}
 
 
-	public DespesaVO(String descricaoDespesa, Double valorDespesa, LocalDate pagamentoDespesa,
+	public Despesa(String descricaoDespesa, Double valorDespesa, LocalDate pagamentoDespesa,
 			LocalDate vencimentoDespesa, String categoriaDespesa) {
 		super();
 		this.dataVencimento = vencimentoDespesa;
@@ -30,9 +30,9 @@ public class DespesaVO extends LancamentoVO {
 		this.categoria = categoriaDespesa;
 	}
 
-	public DespesaVO(int id, String descricaoDespesa, Double valorDespesa, LocalDate pagamentoDespesa,
+	public Despesa(int id, String descricaoDespesa, Double valorDespesa, LocalDate pagamentoDespesa,
 			LocalDate vencimentoDespesa, String categoriaDespesa) {
-		super();
+		super(id, id, descricaoDespesa, valorDespesa);
 		this.dataVencimento = vencimentoDespesa;
 		this.dataPagamento = pagamentoDespesa;
 		this.categoria = categoriaDespesa;
@@ -65,7 +65,7 @@ public class DespesaVO extends LancamentoVO {
 
 	@Override
 	public String toString() {
-		return "DespesaVO [dataVencimento=" + dataVencimento + ", dataPagamento=" + dataPagamento + ", categoria="
+		return "Despesa [dataVencimento=" + dataVencimento + ", dataPagamento=" + dataPagamento + ", categoria="
 				+ categoria + "]";
 	}
 

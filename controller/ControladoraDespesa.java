@@ -6,46 +6,47 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import model.bo.DespesaBO;
+import model.bo.UsuarioBO;
 import model.seletor.DespesaSeletor;
-import model.vo.DespesaVO;
+import model.vo.Despesa;
 
 public class ControladoraDespesa {
 
 	// CADASTRAR DESPESA. 
-	public void cadastrarDespesaController(DespesaVO despesaVO) {
+	public void cadastrarDespesaController(Despesa despesa) {
 		DespesaBO despesaBO = new DespesaBO();
-		despesaBO.cadastrarDespesaBO(despesaVO);
+		despesaBO.cadastrarDespesaBO(despesa);
 	}
 
 	// CONSULTAR DESPESA (TODOS).
-	public ArrayList<DespesaVO> consultarTodasDespesasController() {
+	public ArrayList<Despesa> consultarTodasDespesasController() {
 		DespesaBO despesaBO = new DespesaBO();
 		return despesaBO.consultarDespesaBO();
 	}
 
 	// CONSULTAR DESPESA (UM). 
-	public DespesaVO consultarDespesaController(DespesaVO despesaVO) {
+	public Despesa consultarDespesaController(Despesa despesa) {
 		DespesaBO despesaBO = new DespesaBO();
-		return despesaBO.consultarDespesaBO(despesaVO);
+		return despesaBO.consultarDespesaBO(despesa);
 	}
 
 	// ATUALIZAR DESPESA. 
-	public void atualizarDespesaController(DespesaVO despesaVO) {
+	public void atualizarDespesaController(Despesa despesa) {
 		DespesaBO despesaBO = new DespesaBO();
-		despesaBO.atualizarDespesaBO(despesaVO);
+		despesaBO.atualizarDespesaBO(despesa);
 	}
 
 	// EXCLUIR DESPESA.
-	public void excluirDespesaController(DespesaVO despesaVO) {
+	public void excluirDespesaController(Despesa despesa) {
 		DespesaBO despesaBO = new DespesaBO();
-		despesaBO.excluirDespesaBO(despesaVO);
+		despesaBO.excluirDespesaBO(despesa);
 	}
 
-	public ArrayList<DespesaVO> consultarDespesa(DespesaSeletor seletor) {
+	public ArrayList<Despesa> consultarDespesa(DespesaSeletor seletor) {
 		// TODO Auto-generated method stub
 		return null;
 	}
-	public ArrayList<DespesaVO> consultarTodasAsDespesasPorUsuario(int idusuario) {
+	public ArrayList<Despesa> consultarTodasAsDespesasPorUsuario(int idusuario) {
 		DespesaBO despesaBO = new DespesaBO();
 		return despesaBO.consultarTodasAsDespesasPorUsuario(idusuario);
 	}
@@ -85,6 +86,16 @@ public class ControladoraDespesa {
 		boolean resultadoVerificacao = matcher.matches();
 
 		return resultadoVerificacao;
+	}
+
+	public ArrayList<String> verificarCategoriasDespesaDoUsuario(int idUsuario) {
+		UsuarioBO usuarioBO = new UsuarioBO();
+		return usuarioBO.verificarCategoriasDespesaDoUsuario(idUsuario);
+	}
+
+	public ArrayList<String> verificarDescricoesDespesaDoUsuario(int idUsuario) {
+		UsuarioBO usuarioBO = new UsuarioBO();
+		return usuarioBO.verificarDescricoesDespesaDoUsuario(idUsuario);
 	}
 
 	

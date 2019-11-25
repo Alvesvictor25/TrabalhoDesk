@@ -1,7 +1,7 @@
 package model.dao;
 
 import java.sql.Connection;
-
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -9,14 +9,11 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 
-import model.vo.ReceitaVO;
-
-
+import model.vo.Receita;
 
 public class ReceitaDAO {
 	DateTimeFormatter dateTime = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
-	// VERIFICAR ID RECEITA.
 	public boolean verificarRegistroPorId(int id) {
 		Connection conn = Banco.getConnection();
 		Statement stmt = Banco.getStatement(conn);
@@ -43,21 +40,20 @@ public class ReceitaDAO {
 		return false;
 	}
 
-	// CADASTRO RECEITA.
-	public int cadastrarReceitaDAO(ReceitaVO receitaVO) {
+	public boolean cadastrarReceitaDAO(Receita receita) {
 		Connection conn = Banco.getConnection();
-		Statement stmt = Banco.getStatement(conn);
 		int resultado = 0;
-		
+		String sql = "INSERT INTO receita (IDUSUARIO, descricao, valor, datareceita, categoria) VALUES (?,?,?,?,?)";
+		PreparedStatement stmt = Banco.getPreparedStatement(conn, sql);
 
-		String query = "INSERT INTO receita (IDUSUARIO, descricao, valor, datareceita) VALUES (" 
-				+ receitaVO.getIdusuario() + ", '"
-				+ receitaVO.getDescricao() + "', " 
-				+ receitaVO.getValor() + ", '" 
-				+ receitaVO.getDataReceita() + "')";
 
 		try {
-			resultado = stmt.executeUpdate(query);
+			stmt.setInt(1,  receita.getId());
+			stmt.setString(2, receita.getDescricao());
+			stmt.setDouble(3, receita.getValor());
+			stmt.setDate(4, java.sql.Date.valueOf(receita.getDataReceita()));
+			stmt.setString(5, receita.getCategoria());
+			resultado = stmt.executeUpdate();
 		} catch (SQLException e) {
 			System.out.println("Erro ao executar a Query que verifica a existência de uma receita por ID.");
 			System.out.println("Erro: " + e.getMessage());
@@ -66,29 +62,28 @@ public class ReceitaDAO {
 			Banco.closeStatement(stmt);
 			Banco.closeConnection(conn);
 		}
-		return resultado;
+		return resultado > 0;
 	}
 
-	// CONSULTAR RECEITA (TODAS).
-	public ArrayList<ReceitaVO> consultarTodasReceitasDAO() {
+	public ArrayList<Receita> consultarTodasReceitasDAO() {
 		Connection conn = Banco.getConnection();
 		Statement stmt = Banco.getStatement(conn);
 		ResultSet resultado = null;
-		ArrayList<ReceitaVO> receitasVO = new ArrayList<ReceitaVO>();
+		ArrayList<Receita> receitasVO = new ArrayList<Receita>();
 
 		String query = "SELECT IDRECEITA,IDUSUARIO,DESCRICAO,VALOR,DATARECEITA FROM RECEITA";
 
 		try {
 			resultado = stmt.executeQuery(query);
 			while (resultado.next()) {
-				ReceitaVO receitaVO = new ReceitaVO();
-				receitaVO.setId(resultado.getInt(1));
-				receitaVO.setIdusuario(resultado.getInt(2));
-				receitaVO.setDescricao(resultado.getString(3));
-				receitaVO.setValor(resultado.getDouble(4));
-				receitaVO.setDataReceita(LocalDate.parse(resultado.getString(5), dateTime));
+				Receita receita = new Receita();
+				receita.setId(resultado.getInt(1));
+				receita.setIdUsuario(resultado.getInt(2));
+				receita.setDescricao(resultado.getString(3));
+				receita.setValor(resultado.getDouble(4));
+				receita.setDataReceita(LocalDate.parse(resultado.getString(5), dateTime));
 			
-				receitasVO.add(receitaVO);
+				receitasVO.add(receita);
 
 			}
 		} catch (SQLException e) {
@@ -104,23 +99,23 @@ public class ReceitaDAO {
 	}
 
 	// CONSULTAR RECEITA (UM). 
-	public ReceitaVO consultarTodasReceitasDAO(ReceitaVO receitaVO) {
+	public Receita consultarTodasReceitasDAO(Receita receita) {
 		Connection conn = Banco.getConnection();
 		Statement stmt = Banco.getStatement(conn);
 		ResultSet resultado = null;
-		ReceitaVO receita = new ReceitaVO();
+		Receita receitaUsuario = new Receita();
 
 		String query = "SELECT IDRECEITA, IDUSUARIO,DESCRICAO,VALOR,DATARECEITA FROM RECEITA WHERE IDRECEITA = "
-				+ receitaVO.getId();
+				+ receita.getId();
 
 		try {
 			resultado = stmt.executeQuery(query);
 			while (resultado.next()) {
-				receita.setId(resultado.getInt(1));
-				receita.setIdusuario(resultado.getInt(2));
-				receita.setDescricao(resultado.getString(3));
-				receita.setValor(resultado.getDouble(4));
-				receita.setDataReceita(LocalDate.parse(resultado.getString(5), dateTime));
+				receitaUsuario.setId(resultado.getInt(1));
+				receitaUsuario.setIdUsuario(resultado.getInt(2));
+				receitaUsuario.setDescricao(resultado.getString(3));
+				receitaUsuario.setValor(resultado.getDouble(4));
+				receitaUsuario.setDataReceita(LocalDate.parse(resultado.getString(5), dateTime));
 				
 			}
 		} catch (SQLException e) {
@@ -133,20 +128,19 @@ public class ReceitaDAO {
 			Banco.closeConnection(conn);
 
 		}
-		return receita;
+		return receitaUsuario;
 
 	}
 
-	// ATUALIZAR RECEITA.
-	public int atualizarReceitaDAO(ReceitaVO receitaVO) {
+	public int atualizarReceitaDAO(Receita receita) {
 		Connection conn = Banco.getConnection();
 		Statement stmt = Banco.getStatement(conn);
 		int resultado = 0;
 
-		String query = "UPDATE RECEITA SET IDRECEITA =" + receitaVO.getId() + ", idusuario = " + receitaVO.getIdusuario()
-		+ ", descricao = '" + receitaVO.getDescricao() + "', valor ="
-		+ receitaVO.getValor() + ", datareceita = '" + receitaVO.getDataReceita()
-		+  "' WHERE IDRECEITA = " + receitaVO.getId();
+		String query = "UPDATE RECEITA SET IDRECEITA =" + receita.getId() + ", idusuario = " + receita.setIdUsuario()
+		+ ", descricao = '" + receita.getDescricao() + "', valor ="
+		+ receita.getValor() + ", datareceita = '" + receita.getDataReceita()
+		+  "' WHERE IDRECEITA = " + receita.getId();
 		
 		try {
 			resultado = stmt.executeUpdate(query);
@@ -163,13 +157,12 @@ public class ReceitaDAO {
 		return resultado;
 	}
 
-	// EXCLUIR RECEITA. 
-	public int excluirReceitaDAO(ReceitaVO receitaVO) {
+	public int excluirReceitaDAO(Receita receita) {
 		Connection conn = Banco.getConnection();
 		Statement stmt = Banco.getStatement(conn);
 		int resultado = 0;
 
-		String query = "DELETE FROM receita WHERE idreceita = " + receitaVO.getId();
+		String query = "DELETE FROM receita WHERE idreceita = " + receita.getId();
 
 		try {
 			resultado = stmt.executeUpdate(query);

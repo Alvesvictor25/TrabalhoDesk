@@ -13,7 +13,7 @@ import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
 
 import controller.ControladoraUsuario;
-import model.vo.UsuarioVO;
+import model.vo.Usuario;
 
 public class FrmRecuperarConta extends JFrame {
 
@@ -32,7 +32,7 @@ public class FrmRecuperarConta extends JFrame {
 	private JLabel lblSenha;
 	private JLabel lblEmail;
 	private JButton btnEnviarEmail;
-	private UsuarioVO usuario;
+	private Usuario usuario;
 	private int count = 0;
 	private JTextField txtLoginRecoverykey;
 	private JButton btnReenviarEmail;
@@ -63,6 +63,7 @@ public class FrmRecuperarConta extends JFrame {
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
+		setTitle("Recuperar senha");
 
 		txtEmail = new JTextField();
 		txtEmail.setBounds(297, 114, 96, 20);

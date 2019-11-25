@@ -1,11 +1,11 @@
 package model.seletor;
 
-import model.vo.UsuarioVO;
+import model.vo.Usuario;
 
 public class Seletor {
 
 	//Atributos que servirão de filtros
-	private UsuarioVO nomeUsuario;
+	private Usuario nomeUsuario;
 	private String cpfUsuario;
 	
 	//Atributos para possível paginação dos resultados (intervalo)
@@ -18,7 +18,7 @@ public class Seletor {
 		this.pagina = -1;
 	}
 	
-	public Seletor(UsuarioVO nomeSelecionado, String cpfSelecionado) {
+	public Seletor(Usuario nomeSelecionado, String cpfSelecionado) {
 	}
 	
 
@@ -59,10 +59,10 @@ public class Seletor {
 	}
 
 	//Getters e setters
-	public UsuarioVO getUsuario() {
+	public Usuario getUsuario() {
 		return nomeUsuario;
 	}
-	public void setUsuario(UsuarioVO usuario) {
+	public void setUsuario(Usuario usuario) {
 		this.nomeUsuario = usuario;
 	}
 	public String getCategoria() {

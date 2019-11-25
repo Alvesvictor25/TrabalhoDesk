@@ -1,6 +1,8 @@
 package model.vo;
 
-public class UsuarioVO {
+import java.util.List;
+
+public class Usuario {
 
 	private int idUsuario;
 	private String nome;
@@ -10,12 +12,27 @@ public class UsuarioVO {
 	private String senha;
 	private String email;
 	private int codigoRecoveryKey;
+	private List<ContaBanco> contasBancos;
 
-	public UsuarioVO() {
+	public Usuario() {
 		super();
 	}
 
-	public UsuarioVO(int idUsuario, String nome, String cpf, String telefone, String login, String senha, String email,
+	public Usuario(int idUsuario, String nome, String cpf, String telefone, String login, String senha, String email,
+			int codigoRecoveryKey, List<ContaBanco> contasBancos) {
+		super();
+		this.idUsuario = idUsuario;
+		this.nome = nome;
+		this.cpf = cpf;
+		this.telefone = telefone;
+		this.login = login;
+		this.senha = senha;
+		this.email = email;
+		this.codigoRecoveryKey = codigoRecoveryKey;
+		this.contasBancos = contasBancos;
+	}
+
+	public Usuario(int idUsuario, String nome, String cpf, String telefone, String login, String senha, String email,
 			int codigoRecoveryKey) {
 		super();
 		this.idUsuario = idUsuario;
@@ -28,7 +45,7 @@ public class UsuarioVO {
 		this.codigoRecoveryKey = codigoRecoveryKey;
 	}
 
-	public UsuarioVO(String nome, String cpf, String telefone, String login, String senha, String email,
+	public Usuario(String nome, String cpf, String telefone, String login, String senha, String email,
 			int codigoRecoveryKey) {
 		super();
 		this.nome = nome;
@@ -40,7 +57,7 @@ public class UsuarioVO {
 		this.codigoRecoveryKey = codigoRecoveryKey;
 	}
 
-	public UsuarioVO(String nome, String cpf, String telefone, String login, String senha, String email) {
+	public Usuario(String nome, String cpf, String telefone, String login, String senha, String email) {
 		this.nome = nome;
 		this.cpf = cpf;
 		this.telefone = telefone;
@@ -97,13 +114,7 @@ public class UsuarioVO {
 		this.senha = senha;
 	}
 
-	public String getEmail() {
-		return email;
-	}
-
-	public void setEmail(String email) {
-		this.email = email;
-	}
+	
 
 	public int getCodigoRecoveryKey() {
 		return codigoRecoveryKey;
@@ -113,13 +124,20 @@ public class UsuarioVO {
 		this.codigoRecoveryKey = codigoRecoveryKey;
 	}
 
-	public void imprimir() {
-		System.out.printf("%-10s  %-20s  %-15s  %-15s %-15s \n", this.getIdUsuario(), this.getNome(), this.getCpf(),
-				this.getTelefone(), this.getLogin());
+	public List<ContaBanco> getContasBancos() {
+		return contasBancos;
 	}
 
-	@Override
-	public String toString() {
-		return nome;
+	public void setContasBancos(List<ContaBanco> contasBancos) {
+		this.contasBancos = contasBancos;
 	}
+
+	public String getEmail() {
+		return email;
+	}
+
+	public void setEmail(String email) {
+		this.email = email;
+	}
+
 }

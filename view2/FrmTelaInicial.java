@@ -14,12 +14,12 @@ import javax.swing.UIManager.LookAndFeelInfo;
 import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.border.EmptyBorder;
 
-import model.vo.UsuarioVO;
+import model.vo.Usuario;
 
 public class FrmTelaInicial extends JFrame {
 
 	private JPanel contentPane;
-	private static UsuarioVO usuario;
+	private static Usuario usuario;
 
 	/**
 	 * Launch the application.
@@ -41,7 +41,7 @@ public class FrmTelaInicial extends JFrame {
 	 * Create the frame.
 	 * @param usuario2 
 	 */
-	public FrmTelaInicial(UsuarioVO usuarioLogin) {
+	public FrmTelaInicial(Usuario usuarioLogin) {
 		usuario = usuarioLogin;
 		try {
 			for (LookAndFeelInfo info : UIManager.getInstalledLookAndFeels()) {
@@ -73,12 +73,9 @@ public class FrmTelaInicial extends JFrame {
 		jTabbedPane1.setBounds(100, 100, 900, 650);
 		jTabbedPane1.setOpaque(true);
 		contentPane.add(jTabbedPane1);
-		JPanel telaInicial = new JPanel();
-		telaInicial.setLayout(null);
-		jTabbedPane1.addTab("Principal", telaInicial);
 
 		JPprincipal jpInicial = new JPprincipal(usuario);
-		jTabbedPane1.addTab("inicio", jpInicial);
+		jTabbedPane1.addTab("Principal", jpInicial);
 		jpInicial.setLayout(null);
 		jpInicial.setBounds(100, 100, 900, 650);
 
@@ -92,7 +89,6 @@ public class FrmTelaInicial extends JFrame {
 		painelDespesa.setLayout(null);
 		painelDespesa.setBounds(100, 100, 900, 650);
 		
-		JOptionPane.showMessageDialog(null, usuario + "| ID: " + usuario.getIdUsuario());
 	}
 
 }

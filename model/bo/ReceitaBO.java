@@ -2,53 +2,38 @@ package model.bo;
 
 import java.util.ArrayList;
 import model.dao.ReceitaDAO;
-import model.vo.ReceitaVO;
+import model.vo.Receita;
 
 
 public class ReceitaBO {
 
-	// CADASTRAR RECEITA.
-	public void cadastrarReceitaBO(ReceitaVO receitaVO) {
+	public boolean cadastrarReceitaBO(Receita receita) {
 		ReceitaDAO receitaDAO = new ReceitaDAO();
-		if (receitaDAO.verificarRegistroPorId(receitaVO.getId())) {
-		System.out.println("\nReceita já está cadastrado.");
-
-		} else {
-			int resultado = receitaDAO.cadastrarReceitaDAO(receitaVO);
-			if (resultado == 1) {
-				System.out.println("\nReceita cadastrada com sucesso.");
-
-			} else {
-				System.out.println("\nNão foi possivel cadastrar a receita.");
-			}
-		}
+		return receitaDAO.cadastrarReceitaDAO(receita);
 	}
 
-	// CONSULTAR RECEITA (TODAS).
-	public ArrayList<ReceitaVO> consultarReceitasBO() {
+	public ArrayList<Receita> consultarReceitasBO() {
 		ReceitaDAO receitaDAO = new ReceitaDAO();
-		ArrayList<ReceitaVO> listaReceitasVO = receitaDAO.consultarTodasReceitasDAO();
+		ArrayList<Receita> listaReceitasVO = receitaDAO.consultarTodasReceitasDAO();
 		if (listaReceitasVO.isEmpty()) {
 			System.out.println("\nA lista de receita está vazia.");
 		}
 		return listaReceitasVO;
 	}
 
-	// CADASTRAR RECEITA (UM).
-	public ReceitaVO consultarReceitaBO(ReceitaVO receitaVO) {
+	public Receita consultarReceitaBO(Receita receita) {
 		ReceitaDAO receitaDAO= new ReceitaDAO();
-		ReceitaVO receita = receitaDAO.consultarTodasReceitasDAO(receitaVO);
-		if (receita == null) {
+		Receita receitaUsuario = receitaDAO.consultarTodasReceitasDAO(receita);
+		if (receitaUsuario == null) {
 			System.out.println("\nReceita não localizada.");
 		}
-		return receita;
+		return receitaUsuario;
 	}
 
-	// ATUALIZAR RECEITA.
-	public void atualizarReceitaBO(ReceitaVO receitaVO) {
+	public void atualizarReceitaBO(Receita receita) {
 		ReceitaDAO receitaDAO = new ReceitaDAO();
-		if (receitaDAO.verificarRegistroPorId(receitaVO.getId())) {
-			int resultado = receitaDAO.atualizarReceitaDAO(receitaVO);
+		if (receitaDAO.verificarRegistroPorId(receita.getId())) {
+			int resultado = receitaDAO.atualizarReceitaDAO(receita);
 			if (resultado == 1) {
 				System.out.println("\nReceita atualizado com sucessa.");
 			} else {
@@ -60,11 +45,10 @@ public class ReceitaBO {
 		}
 	}
 
-	// EXCLUIR RECEITA. 
-	public void excluirReceitaBO(ReceitaVO receitaVO) {
+	public void excluirReceitaBO(Receita receita) {
 		ReceitaDAO receitaDAO = new ReceitaDAO();
-		if (receitaDAO.verificarRegistroPorId(receitaVO.getId())) {
-			int resultado = receitaDAO.excluirReceitaDAO(receitaVO);
+		if (receitaDAO.verificarRegistroPorId(receita.getId())) {
+			int resultado = receitaDAO.excluirReceitaDAO(receita);
 			if (resultado == 1) {
 				System.out.println("\nReceita excluida com sucesso.");
 			} else {

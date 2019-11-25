@@ -3,29 +3,26 @@ package controller;
 import java.util.ArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import javax.swing.JTextField;
-
 import model.bo.UsuarioBO;
-import model.vo.UsuarioVO;
+import model.vo.Usuario;
 
 public class ControladoraUsuario {
 
-	public void cadastrarUsuarioController(UsuarioVO usuarioVO) {
+	public void cadastrarUsuarioController(Usuario usuario) {
 		UsuarioBO usuarioBO = new UsuarioBO();
-		usuarioBO.cadastrarUsuarioBO(usuarioVO);
+		usuarioBO.cadastrarUsuarioBO(usuario);
 	}
 
 	// CONSULTAR USUARIO (TODOS).
-	public ArrayList<UsuarioVO> consultarTodosUsuariosController() {
+	public ArrayList<Usuario> consultarTodosUsuariosController() {
 		UsuarioBO usuarioBO = new UsuarioBO();
 		return usuarioBO.consultarUsuariosBO();
 	}
 
 	// CONSULTAR USUARIO (UM).
-	public UsuarioVO consultarUsuariosController(UsuarioVO usuarioVO) {
+	public Usuario consultarUsuariosController(Usuario usuario) {
 		UsuarioBO usuarioBO = new UsuarioBO();
-		return usuarioBO.consultarUsuarioBO(usuarioVO);
+		return usuarioBO.consultarUsuarioBO(usuario);
 	}
 
 	public ArrayList<String> consultarTodosOsCpfs() {
@@ -39,15 +36,15 @@ public class ControladoraUsuario {
 	}
 
 	// ATUALIZAR USUARIO.
-	public void atualizarUsuarioController(UsuarioVO usuarioVO) {
+	public void atualizarUsuarioController(Usuario usuario) {
 		UsuarioBO usuarioBo = new UsuarioBO();
-		usuarioBo.atualizarUsuarioBO(usuarioVO);
+		usuarioBo.atualizarUsuarioBO(usuario);
 	}
 
 	// EXCLUIR USUARIO
-	public void excluirUsuarioController(UsuarioVO usuarioVO) {
+	public void excluirUsuarioController(Usuario usuario) {
 		UsuarioBO usuarioBO = new UsuarioBO();
-		usuarioBO.excluirUsuarioBO(usuarioVO);
+		usuarioBO.excluirUsuarioBO(usuario);
 	}
 
 	public String validarCamposCadastro(String username, String novaSenha, String confirmarSenha, String usuarioNome,
@@ -93,7 +90,7 @@ public class ControladoraUsuario {
 	}
 
 	public boolean validarNomeUsuario(String usuarioNome) {
-		String regex = "[\\w]{3,10}\\s[\\w]{3,10}$";
+		String regex = "[\\w]{3,10}\\s[\\w]{3,10}$\\s?";
 		boolean verificarNomeUsuario = validarCamposRegex(regex, usuarioNome);
 		return verificarNomeUsuario;
 	}
@@ -225,12 +222,12 @@ public class ControladoraUsuario {
 		return mensagemValidacao;
 	}
 
-	public UsuarioVO efetuarLogin(String username, String senha) {
+	public Usuario efetuarLogin(String username, String senha) {
 		UsuarioBO usuarioBO = new UsuarioBO();
 		return usuarioBO.efetuarLogin(username, senha);
 	}
 
-	public UsuarioVO obterUsuarioParaTrocarSenha(String usernameUsuario, int recoverykey) {
+	public Usuario obterUsuarioParaTrocarSenha(String usernameUsuario, int recoverykey) {
 		UsuarioBO usuarioBO = new UsuarioBO();
 		return usuarioBO.obterUsuarioParaTrocarSenha(usernameUsuario, recoverykey);
 	}

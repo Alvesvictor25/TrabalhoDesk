@@ -7,7 +7,7 @@ import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
 import controller.ControladoraUsuario;
-import model.vo.UsuarioVO;
+import model.vo.Usuario;
 
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -29,7 +29,7 @@ public class FrmCadastrarUsuario extends JFrame {
 	private JTextField txtUsuarioEmail;
 	private JTextField txtUsuarioUsername;
 	private JTextField txtConfirmarSenha;
-	private UsuarioVO usuario;
+	private Usuario usuario;
 
 	/**
 	 * Launch the application.
@@ -76,7 +76,7 @@ public class FrmCadastrarUsuario extends JFrame {
 						usuarioNome, usuarioCpf, usuarioTelefone, usuarioEmail);
 
 				if (mensagemValidacao.isEmpty()) {
-					usuario = new UsuarioVO(usuarioNome, usuarioCpf, usuarioTelefone, username, senha, usuarioEmail);
+					usuario = new Usuario(usuarioNome, usuarioCpf, usuarioTelefone, username, senha, usuarioEmail);
 					controllerUsuario.cadastrarUsuarioController(usuario);
 				} else {
 					JOptionPane.showMessageDialog(null, mensagemValidacao);

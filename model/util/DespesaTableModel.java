@@ -4,7 +4,7 @@ import java.time.LocalDate;
 import java.util.List;
 import javax.swing.table.AbstractTableModel;
 
-import model.vo.DespesaVO;
+import model.vo.Despesa;
  
 public class DespesaTableModel extends AbstractTableModel{
  
@@ -17,9 +17,9 @@ public class DespesaTableModel extends AbstractTableModel{
     private final int DATAVENCIMENTO=4;
  
     private final String colunas[]={"Categoria:","Descrição:","Valor:","Data Pagamento:","Data Vencimento:"};
-    private final List<DespesaVO> dados;
+    private final List<Despesa> dados;
  
-    public DespesaTableModel(List<DespesaVO> dados) {
+    public DespesaTableModel(List<Despesa> dados) {
         this.dados=dados;
     }
  
@@ -55,7 +55,7 @@ public class DespesaTableModel extends AbstractTableModel{
     }
  
     public Object getValueAt(int rowIndex, int columnIndex) {
-        DespesaVO listaDespesas =dados.get(rowIndex);
+        Despesa listaDespesas =dados.get(rowIndex);
  
         switch (columnIndex) {
         case CATEGORIA:
@@ -75,7 +75,7 @@ public class DespesaTableModel extends AbstractTableModel{
  
     @Override
     public void setValueAt(Object aValue, int rowIndex, int columnIndex) {
-        DespesaVO despesa =dados.get(rowIndex);
+        Despesa despesa =dados.get(rowIndex);
  
 
     }
@@ -87,7 +87,7 @@ public class DespesaTableModel extends AbstractTableModel{
      * @param rowIndex
      * @return
      */
-    public DespesaVO getValue(int rowIndex){
+    public Despesa getValue(int rowIndex){
         return dados.get(rowIndex);
     }
  
@@ -96,7 +96,7 @@ public class DespesaTableModel extends AbstractTableModel{
      * @param empregado
      * @return
      */
-    public int indexOf(DespesaVO empregado) {
+    public int indexOf(Despesa empregado) {
         return dados.indexOf(empregado);
     }
  
@@ -104,7 +104,7 @@ public class DespesaTableModel extends AbstractTableModel{
      * add um empregado á lista
      * @param empregado
      */
-    public void onAdd(DespesaVO empregado) {
+    public void onAdd(Despesa empregado) {
         dados.add(empregado);
         fireTableRowsInserted(indexOf(empregado), indexOf(empregado));
     }
@@ -113,7 +113,7 @@ public class DespesaTableModel extends AbstractTableModel{
      * add uma lista de empregados
      * @param dadosIn
      */
-    public void onAddAll(List<DespesaVO> dadosIn) {
+    public void onAddAll(List<Despesa> dadosIn) {
         dados.addAll(dadosIn);
         fireTableDataChanged();
     }
@@ -131,7 +131,7 @@ public class DespesaTableModel extends AbstractTableModel{
      * remove um registro da lista, através do objeto
      * @param empregado
      */
-    public void onRemove(DespesaVO empregado) {
+    public void onRemove(Despesa empregado) {
         int indexBefore=indexOf(empregado);//pega o indice antes de apagar
         dados.remove(empregado);  
         fireTableRowsDeleted(indexBefore, indexBefore);

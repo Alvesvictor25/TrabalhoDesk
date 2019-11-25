@@ -3,14 +3,14 @@ package model.vo;
 public abstract class  LancamentoVO {
 
 	private int id;
-	private int idusuario;
+	private int idUsuario;
 	private String descricao;
 	private double valor;
 	
-	public LancamentoVO(int id, int idusuario, String descricao, double valor) {
+	public LancamentoVO(int id, int idUsuario, String descricao, double valor) {
 		super();
 		this.id = id;
-		this.idusuario = idusuario;
+		this.idUsuario = idUsuario;
 		this.descricao = descricao;
 		this.valor = valor;
 	}
@@ -27,12 +27,12 @@ public abstract class  LancamentoVO {
 		this.id = id;
 	}
 
-	public int getIdusuario() {
-		return idusuario;
+	public int setIdUsuario() {
+		return idUsuario;
 	}
 
-	public void setIdusuario(int idusuario) {
-		this.idusuario = idusuario;
+	public void setIdUsuario(int idUsuario) {
+		this.idUsuario = idUsuario;
 	}
 
 	public String getDescricao() {

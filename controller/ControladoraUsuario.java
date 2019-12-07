@@ -1,8 +1,13 @@
 package controller;
 
 import java.util.ArrayList;
+import java.util.InputMismatchException;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import br.com.caelum.stella.ValidationMessage;
+import br.com.caelum.stella.validation.CPFValidator;
 import model.bo.UsuarioBO;
 import model.vo.Usuario;
 
@@ -52,15 +57,21 @@ public class ControladoraUsuario {
 		String mensagemValidacao = "";
 
 		boolean resultadoUsername = validarUsername(username);
+		boolean resultadoUsernameExistente = verificarRegistroPorUsername(username);
 		boolean resultadoSenha = verificadorDeSenha(novaSenha);
 		boolean resultadoConfirmarSenha = verificadorDeSenha(confirmarSenha);
 		boolean resultadoNome = validarNomeUsuario(usuarioNome);
-		boolean resultadoCpf = validarCpf(usuarioCpf);
+		boolean resultadoCpf = validarNumerosCPF(usuarioCpf);
 		boolean resultadoTelefone = validarTelefone(usuarioTelefone);
 		boolean resultadoEmail = validarEmail(usuarioEmail);
+		boolean resultaEmailExistente = verificarRegistroPorEmail(usuarioEmail);
+		boolean resultadoCpfExistente = validarSeCpfExiste(usuarioCpf);
 
 		if (!resultadoUsername) {
 			mensagemValidacao += "Username inválido.\n";
+		}
+		if (resultadoUsernameExistente) {
+			mensagemValidacao += "Username já cadastrado.\n";
 		}
 		if (!resultadoSenha || !resultadoConfirmarSenha) {
 			mensagemValidacao += "Senha inválida.\n";
@@ -74,19 +85,39 @@ public class ControladoraUsuario {
 		if (!resultadoCpf) {
 			mensagemValidacao += "CPF inválido.\n";
 		}
+		if (resultadoCpfExistente) {
+			mensagemValidacao += "CPF já cadastrado.\n";
+		}
 		if (!resultadoTelefone) {
 			mensagemValidacao += "Telefone inválido.\n";
 		}
+
 		if (!resultadoEmail) {
 			mensagemValidacao += "Email inválido.\n";
+		}
+		if(resultaEmailExistente) {
+			mensagemValidacao += "Email já cadastrado.\n";
 		}
 		return mensagemValidacao;
 	}
 
+	public boolean verificarRegistroPorUsername(String username) {
+		UsuarioBO usuarioBO = new UsuarioBO();
+		return usuarioBO.verificarRegistroPorUsername(username);
+	}
+
+	private boolean validarSeCpfExiste(String usuarioCpf) {
+		UsuarioBO usuarioBO = new UsuarioBO();
+		return usuarioBO.verificarRegistroPorCpf(usuarioCpf);
+	}
+
 	public boolean validarUsername(String username) {
 		String regex = "[a-zA-Z0-9_\\.]{5,15}$";
-		boolean verificarUsername = validarCamposRegex(regex, username);
-		return verificarUsername;
+		if (username != null) {
+			boolean verificarUsername = validarCamposRegex(regex, username);
+			return verificarUsername;
+		}
+		return false;
 	}
 
 	public boolean validarNomeUsuario(String usuarioNome) {
@@ -95,13 +126,13 @@ public class ControladoraUsuario {
 		return verificarNomeUsuario;
 	}
 
-	private boolean validarCpf(String usuarioCpf) {
+	public boolean validarCpf(String usuarioCpf) {
 		String regex = "\\d{3}.\\d{3}.\\d{3}-\\d{2}";
 		boolean verificarCpf = validarCamposRegex(regex, usuarioCpf);
 		return verificarCpf;
 	}
 
-	private boolean validarTelefone(String usuarioTelefone) {
+	public boolean validarTelefone(String usuarioTelefone) {
 		String regex = "(\\(\\d{2}\\)\\s?)?\\d{5}-\\d{4}";
 		boolean verificarTelefone = validarCamposRegex(regex, usuarioTelefone);
 		return verificarTelefone;
@@ -165,19 +196,19 @@ public class ControladoraUsuario {
 			mensagemValidacao += "Confirmar senha precisa ter mais do que 6 caracteres\n"
 					+ "Letras maiúsculas e minúsculas\n" + "Números\n" + "Caracteres especiais.\n";
 		}
-		if (senha != confirmar) {
+		if (!novaSenha.equals(confirmarSenha)) {
 			mensagemValidacao += "Senhas não coincidem";
 		}
 		return mensagemValidacao;
 	}
 
-	private boolean validarEmail(String emailVerificar) {
+	public boolean validarEmail(String emailVerificar) {
 		String regex = "^[\\w!#$%&'*+/=?`{|}~^-]+(?:\\.[\\w!#$%&'*+/=?`{|}~^-]+)*@(?:[a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,6}$";
 		boolean verificarEmail = validarCamposRegex(regex, emailVerificar);
 		return verificarEmail;
 	}
 
-	private static boolean verificadorDeSenha(String senha) {
+	public boolean verificadorDeSenha(String senha) {
 		if (senha.length() < 6)
 			return false;
 
@@ -232,4 +263,23 @@ public class ControladoraUsuario {
 		return usuarioBO.obterUsuarioParaTrocarSenha(usernameUsuario, recoverykey);
 	}
 
+	public boolean validarNumerosCPF(String cpf) {
+		CPFValidator cpfValidator = new CPFValidator();
+		List<ValidationMessage> erros = cpfValidator.invalidMessagesFor(cpf);
+		if (erros.size() > 0) {
+			return false;
+		} else {
+			return true;
+		}
+	}
+
+	public boolean verificarRegistroPorCpf(String cpf) {
+		UsuarioBO usuarioBO = new UsuarioBO();
+		return usuarioBO.verificarRegistroPorCpf(cpf);
+	}
+
+	public boolean verificarRegistroPorEmail(String email) {
+		UsuarioBO usuarioBO = new UsuarioBO();
+		return usuarioBO.verificarRegistroPorEmail(email);
+	}
 }

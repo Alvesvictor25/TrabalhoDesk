@@ -1,18 +1,31 @@
 package view2;
 
+import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
-import javax.swing.SwingConstants;
+
+import org.jfree.chart.ChartFactory;
+import org.jfree.chart.ChartFrame;
+import org.jfree.chart.JFreeChart;
+import org.jfree.chart.plot.CategoryPlot;
+import org.jfree.chart.plot.PlotOrientation;
+import org.jfree.chart.renderer.category.BarRenderer;
+import org.jfree.data.category.DefaultCategoryDataset;
+
+import controller.ControladoraBanco;
 import controller.ControladoraDespesa;
 import model.util.DespesaTableModel;
 import model.vo.Despesa;
@@ -21,6 +34,7 @@ import java.text.SimpleDateFormat;
 
 import com.toedter.calendar.JDateChooser;
 import javax.swing.JComboBox;
+import javax.swing.JDialog;
 import javax.swing.ImageIcon;
 
 public class JPdespesa extends JPanel {
@@ -29,32 +43,33 @@ public class JPdespesa extends JPanel {
 	private JTextField txtDescricao;
 	private JTextField txtValor;
 	private JTextField txtCategoria;
-	private JTable table;
 	SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
-	private String[] colunasTabelaDespesa = { "Descrição", "Valor", "Categoria", "Data de vencimento",
-			"Data de pagamento" };
 	private ArrayList<Despesa> todasDespesasDoUsuario;
-	private JDateChooser jchooserPagamento;
-	private JDateChooser jchooserVencimento;
+	private JDateChooser dcDataPagamento;
+	private JDateChooser dcDataVencimento;
 	private Usuario usuarioDespesa;
 	private JTable tabelaDespesa;
 	private DespesaTableModel modelDespesa;
-	private JComboBox cbTipoDeConta;
 	private JComboBox cbCategoria;
-	private JDateChooser dateChooser2;
-	private JDateChooser dateChooser1;
+	private JDateChooser dcConsultaInicio;
+	private JDateChooser dcConsultaFim;
 	private JComboBox cbDescricao;
 	private JButton btnFiltroDeResultado;
 	private JButton btnOcultarBotesFiltro;
 	private ArrayList<String> categoriasDespesa = new ArrayList<String>();
 	private ArrayList<String> descricoesDespesa = new ArrayList<String>();
+	private JButton btnConsultaComFiltro;
+	private List<Despesa> consultarComFiltro;
+	private JScrollPane scrollPaneDespesa;
+	private JLabel label;
 
 	@SuppressWarnings("unchecked")
 	public JPdespesa(Usuario usuarioLogin) {
-		usuarioDespesa = usuarioLogin;
+		if (usuarioLogin != null) {
+			usuarioDespesa = usuarioLogin;
+		}
 		setLayout(null);
 		setBounds(100, 100, 859, 605);
-
 		JLabel lblDescricao = new JLabel("Descrição");
 		lblDescricao.setBounds(41, 55, 62, 20);
 		add(lblDescricao);
@@ -75,99 +90,94 @@ public class JPdespesa extends JPanel {
 		lblCategoria.setBounds(330, 54, 77, 22);
 		add(lblCategoria);
 
+		dcConsultaFim = new JDateChooser();
+		dcConsultaFim.setBounds(501, 304, 147, 23);
+		add(dcConsultaFim);
+		dcConsultaFim.setVisible(false);
 
-		dateChooser1 = new JDateChooser();
-		dateChooser1.setBounds(742, 304, 107, 20);
-		add(dateChooser1);
+		dcConsultaInicio = new JDateChooser();
+		dcConsultaInicio.setBounds(319, 304, 139, 23);
+		add(dcConsultaInicio);
+		dcConsultaInicio.setVisible(false);
 
-		dateChooser2 = new JDateChooser();
-		dateChooser2.setBounds(606, 304, 107, 20);
-		add(dateChooser2);
-		dateChooser2.setVisible(false);
-	
 		verificarDescricoesDespesaDoUsuario(usuarioDespesa.getIdUsuario());
-		cbDescricao = new JComboBox<Object>(descricoesDespesa.toArray());
-		cbDescricao.setBounds(219, 304, 113, 21);
-		cbDescricao.setSelectedIndex(-1);
+		cbDescricao = new JComboBox(descricoesDespesa.toArray());
+		cbDescricao.setBounds(17, 303, 113, 21);
 		add(cbDescricao);
 		cbDescricao.setVisible(false);
 
 		verificarCategoriasDespesaDoUsuario(usuarioDespesa.getIdUsuario());
-		cbCategoria = new JComboBox<Object>(categoriasDespesa.toArray());
-		cbCategoria.setBounds(378, 304, 113, 21);
-		cbCategoria.setSelectedIndex(-1);
+		cbCategoria = new JComboBox(categoriasDespesa.toArray());
+		cbCategoria.setBounds(178, 304, 113, 21);
 		cbCategoria.setVisible(false);
 		add(cbCategoria);
 
-		cbTipoDeConta = new JComboBox();
-		cbTipoDeConta.setBounds(41, 303, 127, 23);
-		add(cbTipoDeConta);
-		cbTipoDeConta.setVisible(false);
-
 		txtDescricao = new JTextField();
-		txtDescricao.setBounds(113, 55, 181, 21);
+		txtDescricao.setBounds(113, 55, 178, 26);
 		add(txtDescricao);
 		txtDescricao.setColumns(10);
 
 		txtValor = new JTextField();
-		txtValor.setBounds(732, 55, 89, 20);
+		txtValor.setBounds(732, 55, 89, 26);
 		add(txtValor);
 		txtValor.setColumns(10);
 
 		txtCategoria = new JTextField();
-		txtCategoria.setBounds(417, 54, 231, 22);
+		txtCategoria.setBounds(417, 54, 231, 26);
 		add(txtCategoria);
 		txtCategoria.setColumns(10);
 
-		jchooserPagamento = new JDateChooser("dd/MM/yyyy", "##/##/####", (char) 0);
-		jchooserPagamento.setBounds(450, 87, 121, 23);
-		add(jchooserPagamento);
+		dcDataPagamento = new JDateChooser("dd/MM/yyyy", "##/##/####", (char) 0);
+		dcDataPagamento.setBounds(450, 87, 121, 26);
+		add(dcDataPagamento);
 
-		jchooserVencimento = new JDateChooser("dd/MM/yyyy", "##/##/####", (char) 0);
-		jchooserVencimento.setBounds(155, 87, 121, 23);
-		add(jchooserVencimento);
+		dcDataVencimento = new JDateChooser("dd/MM/yyyy", "##/##/####", (char) 0);
+		dcDataVencimento.setBounds(155, 87, 121, 26);
+		add(dcDataVencimento);
 
 		modelDespesa = new DespesaTableModel(getListaDespesas());
 
 		tabelaDespesa = new JTable(modelDespesa);
 		tabelaDespesa.setBounds(17, 336, 876, 172);
-		add(tabelaDespesa);
+		tabelaDespesa.setPreferredScrollableViewportSize(new Dimension(600, 300));
 
-		JButton btnDetalhar = new JButton("Detalhar");
-		btnDetalhar.setBounds(606, 532, 89, 23);
-		add(btnDetalhar);
+		scrollPaneDespesa = new JScrollPane(tabelaDespesa);
+		scrollPaneDespesa.setSize(757, 191);
+		scrollPaneDespesa.setLocation(17, 335);
+		this.add(scrollPaneDespesa);
 
-		
 		JButton btnSalvar = new JButton("Salvar");
 		btnSalvar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				ControladoraDespesa controllerDespesa = new ControladoraDespesa();
 
+				int idUsuario = usuarioDespesa.getIdUsuario();
 				String descricaoDespesa = txtDescricao.getText();
 				Double valorDespesa = Double.parseDouble(txtValor.getText());
 				String categoriaDespesa = txtCategoria.getText();
-				LocalDate pagamentoDespesa = jchooserPagamento.getDate().toInstant().atZone(ZoneId.systemDefault())
+				LocalDate pagamentoDespesa = dcDataPagamento.getDate().toInstant().atZone(ZoneId.systemDefault())
 						.toLocalDate();
-				LocalDate vencimentoDespesa = jchooserVencimento.getDate().toInstant().atZone(ZoneId.systemDefault())
+				LocalDate vencimentoDespesa = dcDataVencimento.getDate().toInstant().atZone(ZoneId.systemDefault())
 						.toLocalDate();
 
 				String mensagemValidacao = controllerDespesa.validarDespesa(descricaoDespesa, valorDespesa,
 						pagamentoDespesa, vencimentoDespesa, categoriaDespesa);
 
 				if (mensagemValidacao.isEmpty()) {
-					int id = usuarioDespesa.getIdUsuario();
-					Despesa despesa = new Despesa(id, descricaoDespesa, valorDespesa, pagamentoDespesa,
+					Despesa despesa = new Despesa(idUsuario, descricaoDespesa, valorDespesa, pagamentoDespesa,
 							vencimentoDespesa, categoriaDespesa);
 					controllerDespesa.cadastrarDespesaController(despesa);
+					modelDespesa.onAdd(despesa);
+
+					limparTextFieldCadastro();
+					JOptionPane.showMessageDialog(null, "Despesa cadastrada com sucesso!!!");
 				} else {
 					JOptionPane.showMessageDialog(null, mensagemValidacao);
 				}
 
-				JOptionPane.showMessageDialog(null, "Despesa cadastrada com sucesso!!!");
-
 			}
 		});
-		btnSalvar.setBounds(330, 132, 181, 28);
+		btnSalvar.setBounds(305, 143, 181, 28);
 		add(btnSalvar);
 
 		JButton btnExcluirDespesa = new JButton("Excluir despesa");
@@ -175,10 +185,17 @@ public class JPdespesa extends JPanel {
 			public void actionPerformed(ActionEvent e) {
 				int despesaSelecionada = tabelaDespesa.getSelectedRow();
 
-				Despesa despesa = todasDespesasDoUsuario.get(despesaSelecionada - 1);
+				Despesa despesa = modelDespesa.getValue(despesaSelecionada);
 				ControladoraDespesa controllerDespesa = new ControladoraDespesa();
 				if (despesa != null) {
-					JOptionPane.showConfirmDialog(null, "Deseja excluir despesa?" + JOptionPane.OK_CANCEL_OPTION);
+					int deletarDespesa = JOptionPane.showConfirmDialog(null,
+							"Deseja excluir despesa?" + JOptionPane.YES_NO_OPTION);
+					if (deletarDespesa == JOptionPane.YES_NO_OPTION) {
+						boolean resultadoDespesaExcluida = controllerDespesa.excluirDespesaController(despesa);
+						if (resultadoDespesaExcluida) {
+							modelDespesa.onRemove(despesaSelecionada);
+						}
+					}
 
 				}
 			}
@@ -189,9 +206,14 @@ public class JPdespesa extends JPanel {
 		JButton btnEditarDespesa = new JButton("Editar despesa");
 		btnEditarDespesa.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				String descricaoDespesa = txtDescricao.getText();
-				Double valorDespesa = Double.parseDouble(txtValor.getText());
-				String categoriaDespesa;
+				JDialog atualizar = new JDialog();
+				atualizar.setVisible(true);
+				atualizar.setBounds(50, 80, 200, 300);
+
+				JTextField nome = new JTextField();
+				nome.setBounds(50, 80, 15, 50);
+				atualizar.getContentPane().add(nome);
+
 			}
 		});
 		btnEditarDespesa.setBounds(207, 533, 139, 20);
@@ -215,29 +237,103 @@ public class JPdespesa extends JPanel {
 				habilitarDesabitarBotoesFiltroDePesquisa(statusBotoes);
 			}
 		});
-		btnOcultarBotesFiltro.setBounds(17, 251, 151, 18);
+		btnOcultarBotesFiltro.setBounds(17, 264, 151, 18);
 		add(btnOcultarBotesFiltro);
 		btnOcultarBotesFiltro.setVisible(false);
+
+		JButton btnGraficoDespesa = new JButton("Detalhar despesas");
+		btnGraficoDespesa.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				ControladoraDespesa controller = new ControladoraDespesa();
+
+				ArrayList<Despesa> todasDespesasDoUsuario = controller
+						.consultarTodasAsDespesasPorUsuario(usuarioDespesa.getIdUsuario());
+
+				DefaultCategoryDataset dataSet = new DefaultCategoryDataset();
+
+				for (Despesa c : todasDespesasDoUsuario) {
+					dataSet.setValue(c.getValor(), c.getDescricao(), "");
+				}
+				JFreeChart freeChart = ChartFactory.createBarChart3D("Gráfico Despesas", "", "Valor", dataSet,
+						PlotOrientation.VERTICAL, true, false, false);
+				BarRenderer render = null;
+				CategoryPlot plot = null;
+				render = new BarRenderer();
+				ChartFrame frame = new ChartFrame("Dr.Muquirana - Gráfico despesas", freeChart);
+				frame.setVisible(true);
+				frame.setBounds(60, 20, 800, 600);
+
+			}
+		});
+		btnGraficoDespesa.setBounds(695, 263, 164, 20);
+		add(btnGraficoDespesa);
+
+		btnConsultaComFiltro = new JButton("Consulta com filtro");
+		btnConsultaComFiltro.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				ControladoraDespesa controller = new ControladoraDespesa();
+				String categoriaDespesa = cbCategoria.getSelectedItem().toString();
+				String descricaoDespesa = cbDescricao.getSelectedItem().toString();
+				Date consultaDateInicio = dcConsultaInicio.getDate();
+				Date consultaDateFim = dcConsultaFim.getDate();
+
+				consultarComFiltro = controller.consultarDespesaComFiltro(categoriaDespesa, descricaoDespesa,
+						consultaDateInicio, consultaDateFim);
+
+				modelDespesa.onRemoveAll();
+				modelDespesa.onAddAll(consultarComFiltro);
+
+			}
+		});
+		btnConsultaComFiltro.setBounds(705, 294, 155, 20);
+		add(btnConsultaComFiltro);
+
+		JButton btnLimparConsulta = new JButton("limpar consulta");
+		btnLimparConsulta.addActionListener(new ActionListener() {
+
+			public void actionPerformed(ActionEvent e) {
+				cbCategoria.setSelectedIndex(-1);
+				cbDescricao.setSelectedIndex(-1);
+				dcConsultaFim.setCalendar(null);
+				dcConsultaInicio.setCalendar(null);
+			}
+
+		});
+		btnLimparConsulta.setBounds(709, 232, 140, 20);
+		add(btnLimparConsulta);
+		
+		label = new JLabel("");
+		label.setIcon(new ImageIcon(JPdespesa.class.getResource("/icones/tenor.gif")));
+		label.setBounds(0, 0, 439, 339);
+		add(label);
+	}
+
+	protected void limparTextFieldCadastro() {
+		txtCategoria.setText("");
+		txtValor.setText("");
+		txtDescricao.setText("");
+		dcDataPagamento.setCalendar(null);
+		dcDataVencimento.setCalendar(null);
+
 	}
 
 	private void verificarDescricoesDespesaDoUsuario(int idUsuario) {
 		ControladoraDespesa controllerDespesa = new ControladoraDespesa();
 		descricoesDespesa = controllerDespesa.verificarDescricoesDespesaDoUsuario(idUsuario);
-		
+
 	}
 
 	private void verificarCategoriasDespesaDoUsuario(int idUsuario) {
 		ControladoraDespesa controllerDespesa = new ControladoraDespesa();
 		categoriasDespesa = controllerDespesa.verificarCategoriasDespesaDoUsuario(idUsuario);
-		
+
 	}
 
 	protected void habilitarDesabitarBotoesFiltroDePesquisa(boolean statusBotoes) {
 		cbCategoria.setVisible(statusBotoes);
-		dateChooser2.setVisible(statusBotoes);
-		dateChooser1.setVisible(statusBotoes);
+		dcConsultaInicio.setVisible(statusBotoes);
+		dcConsultaFim.setVisible(statusBotoes);
 		cbDescricao.setVisible(statusBotoes);
-		cbTipoDeConta.setVisible(statusBotoes);
 		btnFiltroDeResultado.setVisible(!statusBotoes);
 		btnOcultarBotesFiltro.setVisible(statusBotoes);
 

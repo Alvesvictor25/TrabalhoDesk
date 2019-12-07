@@ -1,10 +1,15 @@
 package model.bo;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
+
+import org.jfree.data.category.DefaultCategoryDataset;
 
 import controller.ControladoraUsuario;
 import model.dao.UsuarioDAO;
+import model.seletor.DespesaSeletor;
+import model.vo.Despesa;
 import model.vo.Usuario;
 
 public class UsuarioBO {
@@ -92,7 +97,7 @@ public class UsuarioBO {
 		if (usuario != null) {
 			int recoveryKey = gerarRecoveryKey(usuario);
 			String mensagem = "Acesse o Dr Muquirana e informe o seguinte código: " + recoveryKey;
-			String remetente = "alvesvictor-@hotmail.com";
+			String remetente = "victor.alves@aluno.sc.senac.br";
 			EmailService enviarEmail = new EmailService(remetente, emailUsuarioDestinatario, mensagem);
 			enviarEmail.sendEmail();
 			msg = "Email enviado.";
@@ -138,6 +143,26 @@ public class UsuarioBO {
 	public ArrayList<String> verificarDescricoesDespesaDoUsuario(int idUsuario) {
 		UsuarioDAO usuarioDAO = new UsuarioDAO();
 		return usuarioDAO.verificarDescricoesDespesaDoUsuario(idUsuario);
+	}
+
+	public DefaultCategoryDataset criarGraficoDespesa(int idUsuario) {
+		UsuarioDAO usuarioDAO = new UsuarioDAO();
+		return usuarioDAO.criarGraficoDespesa(idUsuario);
+	}
+
+	public boolean verificarRegistroPorCpf(String cpf) {
+		UsuarioDAO usuarioDAO = new UsuarioDAO();
+		return usuarioDAO.verificarRegistroPorCpf(cpf);
+	}
+
+	public boolean verificarRegistroPorUsername(String username) {
+		UsuarioDAO usuarioDAO = new UsuarioDAO();
+		return usuarioDAO.verificarRegistroPorUsername(username);
+	}
+
+	public boolean verificarRegistroPorEmail(String email) {
+		UsuarioDAO usuarioDAO = new UsuarioDAO();
+		return usuarioDAO.verificarRegistroPorEmail(email);
 	}
 
 }

@@ -32,7 +32,7 @@ public class FrmLogin extends JFrame {
 	protected String login;
 	protected char[] password;
 	private Usuario usuario;
-	private JLabel lblNewLabel_1;
+	private JLabel lblErroLoginUsuario;
 
 	public static void main(String[] args) {	
 		EventQueue.invokeLater(new Runnable() {
@@ -65,7 +65,8 @@ public class FrmLogin extends JFrame {
 		} catch (IllegalAccessException e) {
 			// handle exception
 		}
-		setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+	
+		setDefaultCloseOperation(FrmLogin.DISPOSE_ON_CLOSE);
 		setBounds(100, 100, 936, 607);
 		getContentPane().setLayout(null);
 
@@ -74,7 +75,8 @@ public class FrmLogin extends JFrame {
 		txtLogin.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				txtLogin.setText("alvesvictor_");
+				txtLogin.setText("alvesvictor");
+				lblErroLoginUsuario.setVisible(false);
 			}
 		});
 
@@ -114,32 +116,36 @@ public class FrmLogin extends JFrame {
 
 				if (mensagemValidacao.isEmpty()) {
 					usuario = controllerUsuario.efetuarLogin(txtLogin.getText(), passwordField.getText());
-					passarUsuarioParaTelaInicial(usuario);
-					
+					if(usuario == null) {
+						lblErroLoginUsuario.setVisible(true);
+					} else {
+						passarUsuarioParaTelaInicial(usuario);
+					}
 				} else {
 					JOptionPane.showMessageDialog(null, mensagemValidacao);
+					lblErroLoginUsuario.setVisible(true);
 				}
 			}
 		});
 		btnEntrar.setBounds(126, 259, 182, 29);
 		getContentPane().add(btnEntrar);
 
-		passwordField = new JPasswordField("@Lves2525");
+		passwordField = new JPasswordField("@Mem2020");
 		passwordField.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				passwordField.setText("@Lves2525");
+				passwordField.setText("@Mem2020");
 			}
 		});
 		passwordField.setBackground(Color.WHITE);
 		passwordField.setBounds(140, 204, 175, 29);
 		getContentPane().add(passwordField);
 
-		lblNewLabel_1 = new JLabel("usuário inválido");
-		lblNewLabel_1.setForeground(Color.RED);
-		lblNewLabel_1.setBounds(100, 129, 215, 14);
-		getContentPane().add(lblNewLabel_1);
-		lblNewLabel_1.setVisible(false);
+		lblErroLoginUsuario = new JLabel("username ou senha inválido");
+		lblErroLoginUsuario.setForeground(Color.RED);
+		lblErroLoginUsuario.setBounds(140, 234, 175, 14);
+		getContentPane().add(lblErroLoginUsuario);
+		lblErroLoginUsuario.setVisible(false);
 
 		JLabel lblNewLabel = new JLabel("");
 		lblNewLabel.setIcon(new ImageIcon(FrmLogin.class.getResource("/icones/4.png")));
@@ -150,6 +156,7 @@ public class FrmLogin extends JFrame {
 
 	protected void passarUsuarioParaTelaInicial(Usuario usuario) {
 		FrmTelaInicial telaInicial = new FrmTelaInicial(usuario);
+		FrmNovoUsuario novoUsuario = new FrmNovoUsuario(usuario);
 		telaInicial.setVisible(true);
 		
 	}

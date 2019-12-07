@@ -14,12 +14,20 @@ import javax.swing.UIManager.LookAndFeelInfo;
 import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.border.EmptyBorder;
 
+import controller.ControladoraBanco;
+import model.vo.ContaBanco;
 import model.vo.Usuario;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.util.ArrayList;
+import java.util.List;
 
 public class FrmTelaInicial extends JFrame {
 
 	private JPanel contentPane;
 	private static Usuario usuario;
+	private List<ContaBanco> contasBancoInativas;
+	private List<ContaBanco> contasBancoAtivas;
 
 	/**
 	 * Launch the application.
@@ -73,13 +81,22 @@ public class FrmTelaInicial extends JFrame {
 		jTabbedPane1.setBounds(100, 100, 900, 650);
 		jTabbedPane1.setOpaque(true);
 		contentPane.add(jTabbedPane1);
+		
+		contasBancoAtivas = getContasAtivas();
+		contasBancoInativas = getContasInativas();
 
-		JPprincipal jpInicial = new JPprincipal(usuario);
+		JPprincipal jpInicial = new JPprincipal(usuario, contasBancoAtivas, contasBancoInativas);
 		jTabbedPane1.addTab("Principal", jpInicial);
 		jpInicial.setLayout(null);
 		jpInicial.setBounds(100, 100, 900, 650);
 
-		JPreceita jpReceita = new JPreceita(usuario);
+		JPreceita jpReceita = new JPreceita(usuario, contasBancoAtivas);
+		jpReceita.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				JOptionPane.showMessageDialog(null, "Rá");
+			}
+		});
 		jTabbedPane1.addTab("Receita", jpReceita);
 		jpReceita.setLayout(null);
 		jpReceita.setBounds(100, 100, 900, 650);
@@ -89,6 +106,22 @@ public class FrmTelaInicial extends JFrame {
 		painelDespesa.setLayout(null);
 		painelDespesa.setBounds(100, 100, 900, 650);
 		
+	}
+	
+	private List<ContaBanco> getContasAtivas() {
+		ControladoraBanco controller = new ControladoraBanco();
+		contasBancoAtivas = new ArrayList<ContaBanco>();
+		boolean statusConta = true;
+		contasBancoAtivas = controller.consultarStatusContaBanco(usuario.getIdUsuario(), statusConta);
+		return contasBancoAtivas;
+	}
+
+	private List<ContaBanco> getContasInativas() {
+		ControladoraBanco controller = new ControladoraBanco();
+		contasBancoInativas = new ArrayList<ContaBanco>();
+		boolean statusConta = false;
+		contasBancoInativas = controller.consultarStatusContaBanco(usuario.getIdUsuario(), statusConta);
+		return contasBancoInativas;
 	}
 
 }

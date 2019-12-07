@@ -1,83 +1,82 @@
 package model.seletor;
 
-import model.vo.Usuario;
+import java.time.LocalDate;
+
 
 public class DespesaSeletor {
 
-
-	// Atributos que servirão de filtros
-	private Usuario nomeUsuario;
-
-	// Atributos para possível paginação dos resultados (intervalo)
-	private int limite;
-	private int pagina;
+	private String descricaoDespesa;
+	private String categoriaDespesa;
+	private String nomeDoBanco;
+	private LocalDate consultaDataInicio;
+	private LocalDate consultaDataFim;
 
 	public DespesaSeletor() {
-		// Default: traz os resultados sem limite e sem página
-		this.limite = 0;
-		this.pagina = -1;
+		super();
 	}
 
-	public DespesaSeletor(Usuario nomeSelecionado) {
-	}
-
-	/**
-	 * Verifica se este seletor tem algum campo preenchido
-	 *
-	 * @return verdadeiro se existe algum campo de filtro preenchido
-	 */
 	public boolean temFiltro() {
 		boolean temFiltro = false;
 
-		if ((this.nomeUsuario != null) && (this.nomeUsuario.getIdUsuario() > 0)) {
+		if ((this.categoriaDespesa != null) && (this.categoriaDespesa.trim().length() > 0)) {
 			temFiltro = true;
 		}
 
+		if ((this.descricaoDespesa != null) && (this.descricaoDespesa.trim().length() > 0)) {
+			temFiltro = true;
+		}
+
+		if ((this.nomeDoBanco != null) && (this.nomeDoBanco.trim().length() > 0)) {
+			temFiltro = true;
+		}
+
+		if (this.consultaDataFim != null) {
+			temFiltro = true;
+		}
+
+		if (this.consultaDataInicio != null) {
+			temFiltro = true;
+		}
 		return temFiltro;
 	}
 
-	/**
-	 * Verifica se os campos de paginacao estao preenchidos
-	 *
-	 * @return verdadeiro se os campos limite e pagina estao preenchidos
-	 */
-	public boolean temPaginacao() {
-		return ((this.limite > 0) && (this.pagina > -1));
+	public String getNomeDoBanco() {
+		return nomeDoBanco;
 	}
 
-	/**
-	 * Calcula deslocamento (offset) a partir da pagina e do limite
-	 *
-	 * @return offset
-	 */
-	public int getOffset() {
-		return (this.limite * (this.pagina - 1));
+	public void setNomeDoBanco(String nomeDoBanco) {
+		this.nomeDoBanco = nomeDoBanco;
 	}
 
-	// Getters e setters
-	public Usuario getUsuario() {
-		return nomeUsuario;
+	public String getDescricaoDespesa() {
+		return descricaoDespesa;
 	}
 
-	public void setUsuario(Usuario usuario) {
-		this.nomeUsuario = usuario;
+	public void setDescricaoDespesa(String descricaoDespesa) {
+		this.descricaoDespesa = descricaoDespesa;
 	}
 
-	public int getLimite() {
-		return limite;
+	public String getCategoriaDespesa() {
+		return categoriaDespesa;
 	}
 
-	public void setLimite(int limite) {
-		this.limite = limite;
+	public void setCategoriaDespesa(String categoriaDespesa) {
+		this.categoriaDespesa = categoriaDespesa;
 	}
 
-	public int getPagina() {
-		return pagina;
+	public LocalDate getConsultaDataInicio() {
+		return consultaDataInicio;
 	}
 
-	public void setPagina(int pagina) {
-		this.pagina = pagina;
+	public void setConsultaDataInicio(LocalDate consultaDataInicio) {
+		this.consultaDataInicio = consultaDataInicio;
+	}
+
+	public LocalDate getConsultaDataFim() {
+		return consultaDataFim;
+	}
+
+	public void setConsultaDataFim(LocalDate consultaDataFim) {
+		this.consultaDataFim = consultaDataFim;
 	}
 }
-
-

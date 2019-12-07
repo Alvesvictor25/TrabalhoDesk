@@ -7,11 +7,69 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.List;
 
+import org.jfree.data.category.DefaultCategoryDataset;
+import org.jfree.data.jdbc.JDBCCategoryDataset;
+
+import model.seletor.DespesaSeletor;
 import model.vo.ContaBanco;
+import model.vo.Despesa;
 import model.vo.Usuario;
 
 public class UsuarioDAO {
+
+	public boolean verificarRegistroPorEmail(String email) {
+		Connection conn = Banco.getConnection();
+		Statement stmt = Banco.getStatement(conn);
+		ResultSet resultado = null;
+
+		String query = "SELECT email FROM usuario WHERE email = '" + email + "'";
+
+		try {
+
+			resultado = stmt.executeQuery(query);
+			if (resultado.next()) {
+				return true;
+
+			}
+		} catch (SQLException error) {
+			System.out.println("Erro ao executar a Query que verifica a existência de um usuário por email.");
+			System.out.println("Erro: " + error.getMessage());
+			error.printStackTrace();
+		} finally {
+			Banco.closeResultSet(resultado);
+			Banco.closeStatement(stmt);
+			Banco.closeConnection(conn);
+		}
+		return false;
+	}
+
+	public boolean verificarRegistroPorUsername(String username) {
+		Connection conn = Banco.getConnection();
+		Statement stmt = Banco.getStatement(conn);
+		ResultSet resultado = null;
+
+		String query = "SELECT login FROM usuario WHERE login = '" + username + "'";
+
+		try {
+
+			resultado = stmt.executeQuery(query);
+			if (resultado.next()) {
+				return true;
+
+			}
+		} catch (SQLException error) {
+			System.out.println("Erro ao executar a Query que verifica a existência de um usuário por login.");
+			System.out.println("Erro: " + error.getMessage());
+			error.printStackTrace();
+		} finally {
+			Banco.closeResultSet(resultado);
+			Banco.closeStatement(stmt);
+			Banco.closeConnection(conn);
+		}
+		return false;
+	}
 
 	// VERIFICAR ID USUARIO.
 	public boolean verificarRegistroPorCpf(String cpf) {
@@ -56,24 +114,25 @@ public class UsuarioDAO {
 			resultado = stmt.executeUpdate();
 
 			ResultSet rs = stmt.getGeneratedKeys();
-			
-				if(rs.next()) {
-					int idGerado = rs.getInt(1);
-					usuario.setIdUsuario(idGerado);
-				}
-			
+
+			if (rs.next()) {
+				int idGerado = rs.getInt(1);
+				usuario.setIdUsuario(idGerado);
+			}
+
 			ContaBancoDAO contaDAO = new ContaBancoDAO();
-			if(usuario.getContasBancos() == null) {
-				ContaBanco usuarioSemConta = new ContaBanco();	
-				
+			if (usuario.getContasBancos() == null) {
+				ContaBanco usuarioSemConta = new ContaBanco();
+
 				usuarioSemConta.setAgencia(0000);
-				usuarioSemConta.setIdUsuario( usuario.getIdUsuario());
-				usuarioSemConta.setNomeDoBanco("Sem banco");
+				usuarioSemConta.setIdUsuario(usuario.getIdUsuario());
+				usuarioSemConta.setNomeDoBanco("Carteira");
 				usuarioSemConta.setNumeroConta(0000);
 				usuarioSemConta.setSaldoDaConta(00.00);
+				usuarioSemConta.setStatusDaConta(true);
 				contaDAO.cadastrarContaBanco(usuarioSemConta);
 			}
-			
+
 		} catch (SQLException e) {
 			System.out.println("Erro ao cadastrar");
 			System.out.println("Erro: " + e.getMessage());
@@ -352,6 +411,7 @@ public class UsuarioDAO {
 
 	private Usuario criarUsuarioResultSet(ResultSet rs) {
 		Usuario usuario = new Usuario();
+		ArrayList<ContaBanco> contasBancoUsuario = new ArrayList<ContaBanco>();
 		try {
 			usuario.setNome(rs.getString("NOME"));
 			usuario.setCpf(rs.getString("CPF"));
@@ -361,6 +421,10 @@ public class UsuarioDAO {
 			usuario.setEmail(rs.getString("EMAIL"));
 			usuario.setCodigoRecoveryKey(rs.getInt("RECOVERYKEY"));
 			usuario.setIdUsuario(rs.getInt("IDUSUARIO"));
+
+			ContaBancoDAO contaDAO = new ContaBancoDAO();
+			contasBancoUsuario = contaDAO.consultarContasPorUsuario(usuario.getIdUsuario());
+			usuario.setContasBancos(contasBancoUsuario);
 
 		} catch (SQLException e) {
 			System.out.println("Erro ao criar usuário resultset. Erro: " + e.getMessage());
@@ -398,7 +462,7 @@ public class UsuarioDAO {
 		ResultSet rs = null;
 		String sql = "select * from usuario where login = ? and senha = ?";
 		PreparedStatement stmt = Banco.getPreparedStatement(conn, sql);
-		Usuario usuario = new Usuario();
+		Usuario usuario = null;
 
 		try {
 			stmt.setString(1, username);
@@ -485,6 +549,19 @@ public class UsuarioDAO {
 
 		return descricoesDespesaPorIdUsuario;
 
+	}
+
+	public DefaultCategoryDataset criarGraficoDespesa(int idUsuario) {
+		Connection conn = Banco.getConnection();
+		DefaultCategoryDataset dataSet = null;
+		String sql = "Select datapagamento, valor from despesa where idusuario = " + idUsuario;
+		try {
+			dataSet = new JDBCCategoryDataset(conn, sql);
+		} catch (SQLException e) {
+			System.out.println("Erro ao criar gráfico despesa");
+			System.out.println("Erro: " + e.getMessage());
+		}
+		return dataSet;
 	}
 
 }

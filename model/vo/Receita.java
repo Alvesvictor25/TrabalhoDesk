@@ -5,10 +5,13 @@ import java.time.LocalDate;
 public class Receita extends LancamentoVO {
 
 	private LocalDate dataReceita;
+	private ContaBanco contaBancoUsuario;
 	private String categoria;
 
-	public Receita(int id, int idusuario, String descricao, double valor, LocalDate dataReceita, String categoria) {
+	public Receita(int id, int idusuario, int idContaBanco, String descricao, double valor, LocalDate dataReceita,
+			String categoria, ContaBanco contaBancoUsuario) {
 		super(id, idusuario, descricao, valor);
+		this.contaBancoUsuario = contaBancoUsuario;
 		this.dataReceita = dataReceita;
 		this.categoria = categoria;
 	}
@@ -17,12 +20,13 @@ public class Receita extends LancamentoVO {
 		super();
 	}
 
-	public Receita(int idUsuarioReceita, String descricaoReceita, String categoriaReceita, Double valorReceita,
-			LocalDate dataReceita2) {
-		super( idUsuarioReceita, idUsuarioReceita, descricaoReceita, valorReceita);
-		this.dataReceita = dataReceita2;
+	public Receita(int idUsuarioReceita, int idContaBanco, String descricaoReceita, String categoriaReceita,
+			LocalDate dataReceita, Double valorReceita, ContaBanco contaBancoUsuario) {
+		super(idUsuarioReceita, idUsuarioReceita, descricaoReceita, valorReceita);
+		this.contaBancoUsuario = contaBancoUsuario;
+		this.dataReceita = dataReceita;
 		this.categoria = categoriaReceita;
-	
+
 	}
 
 	public LocalDate getDataReceita() {
@@ -32,6 +36,7 @@ public class Receita extends LancamentoVO {
 	public void setDataReceita(LocalDate dataReceita) {
 		this.dataReceita = dataReceita;
 	}
+
 	public void setCategoria(String categoria) {
 		this.categoria = categoria;
 	}
@@ -40,15 +45,12 @@ public class Receita extends LancamentoVO {
 		return categoria;
 	}
 
-	public void imprimir() {
-		System.out.printf("\n %-15s %-15s %-18s %-14s %-13s \n",
-				this.getId(),
-				this.setIdUsuario(),
-				this.getDescricao(),
-				this.getValor(),
-				this.getDataReceita());
-		
+	public ContaBanco getContaBancoUsuario() {
+		return contaBancoUsuario;
+	}
 
+	public void setContaBancoUsuario(ContaBanco contaBancoUsuario) {
+		this.contaBancoUsuario = contaBancoUsuario;
 	}
 
 }

@@ -14,6 +14,7 @@ import javax.swing.border.EmptyBorder;
 
 import controller.ControladoraUsuario;
 import model.vo.Usuario;
+import javax.swing.ImageIcon;
 
 public class FrmRecuperarConta extends JFrame {
 
@@ -36,6 +37,7 @@ public class FrmRecuperarConta extends JFrame {
 	private int count = 0;
 	private JTextField txtLoginRecoverykey;
 	private JButton btnReenviarEmail;
+	private String reenviarEmail;
 
 	/**
 	 * Launch the application.
@@ -58,7 +60,7 @@ public class FrmRecuperarConta extends JFrame {
 	 */
 	public FrmRecuperarConta() {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 747, 464);
+		setBounds(100, 100, 811, 552);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
@@ -66,12 +68,12 @@ public class FrmRecuperarConta extends JFrame {
 		setTitle("Recuperar senha");
 
 		txtEmail = new JTextField();
-		txtEmail.setBounds(297, 114, 96, 20);
+		txtEmail.setBounds(175, 340, 187, 23);
 		contentPane.add(txtEmail);
 		txtEmail.setColumns(10);
 
 		txtRecoveryKey = new JTextField();
-		txtRecoveryKey.setBounds(375, 350, 96, 20);
+		txtRecoveryKey.setBounds(175, 355, 187, 23);
 		txtRecoveryKey.setVisible(false);
 		contentPane.add(txtRecoveryKey);
 		txtRecoveryKey.setColumns(10);
@@ -87,37 +89,39 @@ public class FrmRecuperarConta extends JFrame {
 				if (mensagemValidacao.isEmpty()) {
 					usuario.setSenha(txtNovaSenha.getText());
 					controllerUsuario.atualizarUsuarioController(usuario);
+					JOptionPane.showMessageDialog(null, "Senha alterada!");
+				
 				} else {
 					JOptionPane.showMessageDialog(null, mensagemValidacao);
 				}
 			}
 		});
-		btnAtualizar.setBounds(600, 382, 119, 32);
+		btnAtualizar.setBounds(203, 390, 126, 23);
 		btnAtualizar.setVisible(false);
 		contentPane.add(btnAtualizar);
 
 		lblEmail = new JLabel("Email");
-		lblEmail.setBounds(340, 47, 48, 14);
+		lblEmail.setBounds(243, 292, 48, 14);
 		contentPane.add(lblEmail);
 
 		lblRecoveryKey = new JLabel("Recovery Key");
-		lblRecoveryKey.setBounds(375, 291, 96, 17);
+		lblRecoveryKey.setBounds(222, 291, 96, 17);
 		lblRecoveryKey.setVisible(false);
 		contentPane.add(lblRecoveryKey);
 
-		txtNovaSenha = new JTextField();
-		txtNovaSenha.setBounds(623, 318, 96, 20);
+		txtNovaSenha = new JTextField("Nova senha");
+		txtNovaSenha.setBounds(175, 320, 187, 23);
 		txtNovaSenha.setVisible(false);
 		contentPane.add(txtNovaSenha);
 		txtNovaSenha.setColumns(10);
 
 		lblSenha = new JLabel("Senha");
-		lblSenha.setBounds(658, 292, 48, 14);
+		lblSenha.setBounds(243, 294, 48, 14);
 		lblSenha.setVisible(false);
 		contentPane.add(lblSenha);
 
-		txtConfirmarNovaSenha = new JTextField();
-		txtConfirmarNovaSenha.setBounds(623, 350, 96, 20);
+		txtConfirmarNovaSenha = new JTextField("Confirmar senha");
+		txtConfirmarNovaSenha.setBounds(175, 355, 191, 23);
 		txtConfirmarNovaSenha.setVisible(false);
 		contentPane.add(txtConfirmarNovaSenha);
 		txtConfirmarNovaSenha.setColumns(10);
@@ -140,7 +144,7 @@ public class FrmRecuperarConta extends JFrame {
 
 			}
 		});
-		btnEnviarEmail.setBounds(285, 146, 126, 23);
+		btnEnviarEmail.setBounds(203, 390, 126, 23);
 		contentPane.add(btnEnviarEmail);
 
 		btnVerificarCdigo = new JButton("Verificar código");
@@ -164,7 +168,7 @@ public class FrmRecuperarConta extends JFrame {
 				}
 			}
 		});
-		btnVerificarCdigo.setBounds(375, 388, 126, 20);
+		btnVerificarCdigo.setBounds(203, 391, 126, 20);
 		btnVerificarCdigo.setVisible(false);
 		contentPane.add(btnVerificarCdigo);
 
@@ -177,10 +181,15 @@ public class FrmRecuperarConta extends JFrame {
 		contentPane.add(btnReenviarEmail);
 		btnReenviarEmail.setVisible(false);
 
-		txtLoginRecoverykey = new JTextField();
-		txtLoginRecoverykey.setBounds(375, 318, 104, 20);
+		txtLoginRecoverykey = new JTextField("Login");
+		txtLoginRecoverykey.setBounds(175, 320, 191, 23);
 		contentPane.add(txtLoginRecoverykey);
 		txtLoginRecoverykey.setColumns(10);
+		
+		JLabel label = new JLabel("");
+		label.setIcon(new ImageIcon(FrmRecuperarConta.class.getResource("/icones/RK.jpg")));
+		label.setBounds(0, 0, 801, 522);
+		contentPane.add(label);
 		txtLoginRecoverykey.setVisible(false);
 
 	}

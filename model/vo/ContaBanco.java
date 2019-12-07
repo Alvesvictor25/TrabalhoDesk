@@ -8,9 +8,10 @@ public class ContaBanco {
 	private Integer agencia;
 	private Integer numeroConta;
 	private Double saldoDaConta;
+	private boolean statusDaConta;
 
 	public ContaBanco(Integer idUsuario, String nomeDoBanco, Integer idConta, Integer agencia, Integer numeroConta,
-			Double saldoDaConta) {
+			Double saldoDaConta, boolean statusDaConta) {
 		super();
 		this.idUsuario = idUsuario;
 		this.nomeDoBanco = nomeDoBanco;
@@ -18,6 +19,7 @@ public class ContaBanco {
 		this.agencia = agencia;
 		this.numeroConta = numeroConta;
 		this.saldoDaConta = saldoDaConta;
+		this.statusDaConta = statusDaConta;
 	}
 
 	public ContaBanco() {
@@ -25,12 +27,14 @@ public class ContaBanco {
 		// TODO Auto-generated constructor stub
 	}
 
-	public ContaBanco(int idUsuario, String nomeConta, int numeroConta, int agenciaConta, double saldoConta) {
+	public ContaBanco(int idUsuario, String nomeConta, int numeroConta, int agenciaConta, double saldoConta,
+			boolean statusDaConta) {
 		this.idUsuario = idUsuario;
 		this.nomeDoBanco = nomeConta;
 		this.agencia = agenciaConta;
 		this.numeroConta = numeroConta;
 		this.saldoDaConta = saldoConta;
+		this.statusDaConta = statusDaConta;
 	}
 
 	public Integer getIdUsuario() {
@@ -79,6 +83,19 @@ public class ContaBanco {
 
 	public void setNomeDoBanco(String nomeDoBanco) {
 		this.nomeDoBanco = nomeDoBanco;
+	}
+
+	public boolean isStatusDaConta() {
+		return statusDaConta;
+	}
+
+	public void setStatusDaConta(boolean statusDaConta) {
+		this.statusDaConta = statusDaConta;
+	}
+
+	@Override
+	public String toString() {
+		return "Banco: " + nomeDoBanco;
 	}
 
 }

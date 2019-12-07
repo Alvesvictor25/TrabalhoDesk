@@ -8,6 +8,9 @@ import java.sql.Statement;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.List;
+
+import model.seletor.DespesaSeletor;
 import model.vo.Despesa;
 
 public class DespesaDAO {
@@ -179,15 +182,15 @@ public class DespesaDAO {
 		ArrayList<Despesa> listaDespesas = new ArrayList<Despesa>();
 		try {
 			stmt.setInt(1, idUsuario);
-			
+
 			rs = stmt.executeQuery();
-			
+
 			while(rs.next()) {
 				Despesa despesaUsuario = new Despesa();
 				despesaUsuario = criarResultSet(rs);
 				listaDespesas.add(despesaUsuario);
 			}
-			
+
 		} catch(SQLException e) {
 			System.out.println("Erro ao consultar despesas por IDusuário.");
 			System.out.println("Erro: " + e.getMessage());
@@ -212,5 +215,73 @@ public class DespesaDAO {
 			System.out.println("Erro: " + e.getMessage());
 		}
 		return despesaResultSet;
+	}
+
+	public List<Despesa> consultarDespesaComFiltro(DespesaSeletor seletor) {
+		String sql = "select * from despesa p";
+
+		if(seletor.temFiltro()) {
+			sql = criarFiltros(seletor, sql);
+		}
+
+		Connection conn = Banco.getConnection();
+		PreparedStatement stmt = Banco.getPreparedStatement(conn, sql);
+		ArrayList<Despesa> listaDespesas = new ArrayList<Despesa>();
+
+		try {
+			ResultSet rs = stmt.executeQuery();
+
+			while(rs.next()) {
+				Despesa p = criarResultSet(rs);
+				listaDespesas.add(p);
+			}
+		} catch(SQLException e) {
+			System.out.println("Erro na consulta de despesa com filtro");
+			System.out.println("Erro: " + e.getMessage());
+		}
+		return listaDespesas;
+	}
+
+	private String criarFiltros(DespesaSeletor seletor, String sql) {
+		sql += " Where ";
+		boolean primeiro = true;
+		
+		if((seletor.getCategoriaDespesa() != null) && (seletor.getCategoriaDespesa().trim().length() > 0)) {
+			if(!primeiro) {
+				sql += " AND ";
+			}
+			sql += "p.categoria = '" + seletor.getCategoriaDespesa() + "'";
+			primeiro = false;
+		}
+
+		if ((seletor.getDescricaoDespesa() != null) && (seletor.getDescricaoDespesa().trim().length() >0)) {
+			if (!primeiro) {
+				sql += " AND ";
+			}
+			sql += "p.descricao = '" + seletor.getDescricaoDespesa() + "'";
+			primeiro = false;
+		}
+
+		if ((seletor.getConsultaDataInicio() != null) && (seletor.getConsultaDataFim() != null)) {
+
+			if (!primeiro) {
+				sql += " AND ";
+			}
+			sql += " p.dataVencimento BETWEEN " + seletor.getConsultaDataInicio() + " AND " + seletor.getConsultaDataFim();
+			primeiro = false;
+		} else if (seletor.getConsultaDataInicio() != null) {
+			if (!primeiro) {
+				sql += " AND ";
+			}
+			sql += " p.dataVencimento >= " + seletor.getConsultaDataInicio();
+			primeiro = false;
+		} else if (seletor.getConsultaDataFim() != null) {
+			if (!primeiro) {
+				sql += " AND ";
+			}
+			sql += "p.dataVencimento <= " + seletor.getConsultaDataFim();
+			primeiro = false;
+		}
+		return sql;
 	}
 }

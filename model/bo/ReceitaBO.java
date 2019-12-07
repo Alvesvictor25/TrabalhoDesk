@@ -1,7 +1,12 @@
 package model.bo;
 
 import java.util.ArrayList;
+import java.util.List;
+
+import org.jfree.data.category.DefaultCategoryDataset;
+
 import model.dao.ReceitaDAO;
+import model.seletor.ReceitaSeletor;
 import model.vo.Receita;
 
 
@@ -58,5 +63,25 @@ public class ReceitaBO {
 		} else {
 			System.out.println("\nReceita não existe na base de dados.");
 		}
+	}
+
+	public List<Receita> consultarTodasReceitasPorIdUsuario(int idUsuario) {
+		ReceitaDAO receitaDAO = new ReceitaDAO();
+		return receitaDAO.consultarTodasReceitasPorIdUsuario(idUsuario);
+	}
+
+	public DefaultCategoryDataset criarGraficoReceita(int idUsuario) {
+		ReceitaDAO receitaDAO = new ReceitaDAO();
+		return receitaDAO.criarGraficoReceita(idUsuario);
+	}
+
+	public List<Receita> consultarReceitasComFiltro(ReceitaSeletor seletor) {
+		ReceitaDAO receitaDAO = new ReceitaDAO();
+		return receitaDAO.consultarReceitasComFiltro(seletor);
+	}
+
+	public List<String> verificarDescricoesReceitasDoUsuario(int idUsuario) {
+		ReceitaDAO receitaDAO = new ReceitaDAO();
+		return receitaDAO.verificarDescricoesReceitasDoUsuario(idUsuario);
 	}
 }
